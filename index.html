@@ -1,0 +1,3444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Manox Hub</title>
+
+    <meta
+        name="description"
+        content="Manox Hub — Painel, Dashboard, Scripts e Suporte."
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #06070b;
+            --card: rgba(17, 19, 28, .78);
+            --card2: rgba(22, 25, 36, .95);
+            --border: rgba(255,255,255,.08);
+
+            --text: #fff;
+            --muted: #969aaa;
+
+            --primary: #6c7cff;
+            --primary2: #9a6cff;
+
+            --green: #38e58c;
+            --red: #ff5268;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 15% 0%,
+                    rgba(108,124,255,.15),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(154,108,255,.12),
+                    transparent 28%
+                ),
+                var(--bg);
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+
+        /* =====================================
+           HEADER
+        ===================================== */
+
+        header {
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+
+            z-index: 1000;
+
+            border-bottom:
+                1px solid var(--border);
+
+            background:
+                rgba(6,7,11,.76);
+
+            backdrop-filter:
+                blur(22px);
+        }
+
+        .navbar {
+            max-width: 1250px;
+
+            height: 72px;
+
+            margin: auto;
+
+            padding: 0 25px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--primary2)
+                );
+
+            box-shadow:
+                0 0 30px
+                rgba(108,124,255,.25);
+        }
+
+        .logo-text {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .logo-text span {
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 10px;
+
+            font-weight: 500;
+        }
+
+
+        /* =====================================
+           NAV
+        ===================================== */
+
+        .nav {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+        }
+
+        .nav button {
+            border: none;
+
+            color: var(--muted);
+
+            background: transparent;
+
+            padding: 10px 13px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            transition: .2s;
+        }
+
+        .nav button:hover,
+        .nav button.active {
+            color: white;
+
+            background:
+                rgba(255,255,255,.07);
+        }
+
+        .nav .buy {
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--primary2)
+                );
+        }
+
+        .menu-button {
+            display: none;
+
+            width: 42px;
+            height: 42px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 11px;
+
+            color: white;
+
+            background:
+                rgba(255,255,255,.04);
+
+            cursor: pointer;
+
+            font-size: 21px;
+        }
+
+
+        /* =====================================
+           MAIN
+        ===================================== */
+
+        main {
+            max-width: 1250px;
+
+            margin: auto;
+
+            padding:
+                72px 25px 70px;
+        }
+
+        .page {
+            display: none;
+
+            min-height:
+                calc(100vh - 142px);
+
+            padding-top: 60px;
+        }
+
+        .page.active {
+            display: block;
+
+            animation:
+                pageIn .3s ease;
+        }
+
+        @keyframes pageIn {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0);
+            }
+
+        }
+
+
+        /* =====================================
+           HOME
+        ===================================== */
+
+        .hero {
+            min-height: 68vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                8px 13px;
+
+            border:
+                1px solid
+                rgba(108,124,255,.25);
+
+            border-radius: 999px;
+
+            color: #b9c1ff;
+
+            background:
+                rgba(108,124,255,.07);
+
+            font-size: 12px;
+        }
+
+        .badge-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 10px
+                var(--green);
+        }
+
+        .hero h1 {
+            max-width: 850px;
+
+            margin-top: 24px;
+
+            font-size:
+                clamp(42px, 8vw, 78px);
+
+            line-height: .98;
+
+            letter-spacing: -3px;
+        }
+
+        .gradient-text {
+            background:
+                linear-gradient(
+                    90deg,
+                    #fff,
+                    #aeb7ff,
+                    #c39cff
+                );
+
+            color: transparent;
+
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .hero p {
+            max-width: 650px;
+
+            margin-top: 23px;
+
+            color: var(--muted);
+
+            line-height: 1.7;
+
+            font-size: 15px;
+        }
+
+        .hero-buttons {
+            margin-top: 30px;
+
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+        }
+
+
+        /* =====================================
+           BUTTON
+        ===================================== */
+
+        .button {
+            border:
+                1px solid var(--border);
+
+            padding:
+                13px 18px;
+
+            border-radius: 12px;
+
+            color: white;
+
+            background:
+                rgba(255,255,255,.04);
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            transition: .2s;
+        }
+
+        .button:hover {
+            transform:
+                translateY(-2px);
+
+            background:
+                rgba(255,255,255,.08);
+        }
+
+        .button.primary {
+            border: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--primary2)
+                );
+        }
+
+
+        /* =====================================
+           SECTION
+        ===================================== */
+
+        .section-header {
+            margin-bottom: 28px;
+        }
+
+        .section-header h2 {
+            font-size: 35px;
+
+            letter-spacing: -1px;
+        }
+
+        .section-header p {
+            color: var(--muted);
+
+            margin-top: 8px;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================
+           CARDS
+        ===================================== */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0,1fr));
+
+            gap: 17px;
+        }
+
+        .card {
+            padding: 25px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 20px;
+
+            background:
+                var(--card);
+
+            backdrop-filter:
+                blur(20px);
+
+            transition: .2s;
+        }
+
+        .card:hover {
+            transform:
+                translateY(-5px);
+
+            border-color:
+                rgba(255,255,255,.14);
+
+            background:
+                var(--card2);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background:
+                rgba(108,124,255,.12);
+
+            font-size: 22px;
+
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            font-size: 17px;
+        }
+
+        .card p {
+            color: var(--muted);
+
+            margin-top: 9px;
+
+            line-height: 1.6;
+
+            font-size: 13px;
+        }
+
+        .card .card-button {
+            margin-top: 20px;
+
+            width: 100%;
+        }
+
+
+        /* =====================================
+           PRICES
+        ===================================== */
+
+        .prices {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0,1fr));
+
+            gap: 15px;
+        }
+
+        .price-card {
+            position: relative;
+
+            padding: 25px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 20px;
+
+            background:
+                var(--card);
+
+            transition: .25s;
+        }
+
+        .price-card:hover {
+            transform:
+                translateY(-6px);
+
+            border-color:
+                rgba(108,124,255,.35);
+
+            background:
+                var(--card2);
+
+            box-shadow:
+                0 15px 45px
+                rgba(0,0,0,.25);
+        }
+
+        .price-card.featured {
+            border-color:
+                rgba(108,124,255,.45);
+
+            box-shadow:
+                0 0 35px
+                rgba(108,124,255,.08);
+        }
+
+        .popular {
+            position: absolute;
+
+            top: 14px;
+            right: 14px;
+
+            padding:
+                5px 8px;
+
+            border-radius: 999px;
+
+            color: #cbd1ff;
+
+            background:
+                rgba(108,124,255,.13);
+
+            font-size: 9px;
+
+            font-weight: 700;
+        }
+
+        .price-icon {
+            font-size: 26px;
+
+            margin-bottom: 15px;
+        }
+
+        .price-card h3 {
+            font-size: 16px;
+        }
+
+        .duration {
+            color: var(--muted);
+
+            margin-top: 5px;
+
+            font-size: 12px;
+        }
+
+        .price {
+            margin-top: 18px;
+
+            font-size: 32px;
+
+            font-weight: 850;
+
+            letter-spacing: -1px;
+        }
+
+        .price small {
+            color: var(--muted);
+
+            font-size: 12px;
+
+            font-weight: 500;
+        }
+
+        .price-button {
+            width: 100%;
+
+            margin-top: 20px;
+        }
+
+
+        /* =====================================
+           DASHBOARD
+        ===================================== */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0,1fr));
+
+            gap: 15px;
+
+            margin-bottom: 17px;
+        }
+
+        .stat {
+            padding: 21px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 18px;
+
+            background:
+                var(--card);
+        }
+
+        .stat-icon {
+            font-size: 21px;
+
+            margin-bottom: 15px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .stat-value {
+            margin-top: 6px;
+
+            font-size: 29px;
+
+            font-weight: 800;
+        }
+
+        .success {
+            color: var(--green);
+        }
+
+        .error {
+            color: var(--red);
+        }
+
+        .dashboard-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0,1.5fr)
+                minmax(280px,.7fr);
+
+            gap: 17px;
+        }
+
+        .panel {
+            overflow: hidden;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 19px;
+
+            background:
+                var(--card);
+        }
+
+        .panel-header {
+            padding: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+        .panel-title {
+            font-size: 15px;
+
+            font-weight: 750;
+        }
+
+        .panel-subtitle {
+            margin-top: 4px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .refresh {
+            padding:
+                8px 11px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 9px;
+
+            color: white;
+
+            background:
+                rgba(255,255,255,.04);
+
+            cursor: pointer;
+        }
+
+        .search {
+            padding: 14px;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+        .search input {
+            width: 100%;
+
+            padding:
+                11px 13px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
+
+            outline: none;
+
+            color: white;
+
+            background:
+                rgba(255,255,255,.035);
+        }
+
+        .users {
+            max-height: 460px;
+
+            overflow-y: auto;
+        }
+
+        .user {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                13px 17px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.04);
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            border-radius: 11px;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                rgba(108,124,255,.12);
+
+            font-weight: 800;
+        }
+
+        .avatar img {
+            display: block;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .user-info {
+            min-width: 0;
+
+            flex: 1;
+        }
+
+        .username {
+            overflow: hidden;
+
+            white-space: nowrap;
+
+            text-overflow: ellipsis;
+
+            font-size: 13px;
+
+            font-weight: 650;
+        }
+
+        .online {
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            margin-top: 3px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+        .online-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 7px
+                var(--green);
+        }
+
+        .system {
+            padding: 20px;
+        }
+
+        .system-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 15px 0;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,.05);
+        }
+
+        .system-row:first-child {
+            padding-top: 0;
+        }
+
+        .system-row:last-child {
+            border-bottom: none;
+        }
+
+        .system-label {
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .system-value {
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================
+           SUPPORT
+        ===================================== */
+
+        .support-box {
+            max-width: 750px;
+
+            margin: auto;
+
+            padding: 35px;
+
+            text-align: center;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 23px;
+
+            background:
+                var(--card);
+        }
+
+        .support-icon {
+            font-size: 45px;
+
+            margin-bottom: 17px;
+        }
+
+        .support-box h2 {
+            font-size: 28px;
+        }
+
+        .support-box p {
+            color: var(--muted);
+
+            margin-top: 10px;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+        }
+
+        .support-buttons {
+            margin-top: 25px;
+
+            display: flex;
+
+            gap: 10px;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+        }
+
+
+        /* =====================================
+           SCRIPT
+        ===================================== */
+
+        .code {
+            padding: 20px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 15px;
+
+            background: #030407;
+
+            overflow-x: auto;
+        }
+
+        .code pre {
+            color: #cdd3ff;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================
+           YOUTUBE
+        ===================================== */
+
+        .youtube-card {
+            max-width: 850px;
+
+            margin: auto;
+
+            text-align: center;
+
+            padding:
+                45px 30px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 24px;
+
+            background:
+                var(--card);
+        }
+
+        .youtube-icon {
+            font-size: 55px;
+
+            margin-bottom: 18px;
+        }
+
+        .youtube-card h2 {
+            font-size: 30px;
+        }
+
+        .youtube-card p {
+            color: var(--muted);
+
+            margin-top: 10px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================
+           FOOTER
+        ===================================== */
+
+        footer {
+            padding: 25px;
+
+            text-align: center;
+
+            color: #606473;
+
+            border-top:
+                1px solid var(--border);
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================
+           MOBILE
+        ===================================== */
+
+        @media(max-width: 1050px) {
+
+            .prices {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+        }
+
+        @media(max-width: 900px) {
+
+            .nav {
+                position: absolute;
+
+                top: 72px;
+
+                left: 15px;
+                right: 15px;
+
+                display: none;
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+                padding: 10px;
+
+                border:
+                    1px solid var(--border);
+
+                border-radius: 16px;
+
+                background:
+                    rgba(10,12,18,.96);
+
+                backdrop-filter:
+                    blur(20px);
+            }
+
+            .nav.open {
+                display: flex;
+            }
+
+            .nav button {
+                text-align: left;
+
+                padding: 13px;
+            }
+
+            .menu-button {
+                display: block;
+            }
+
+            .stats {
+                grid-template-columns:
+                    repeat(2,1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .cards {
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+        @media(max-width: 550px) {
+
+            .navbar {
+                padding: 0 15px;
+            }
+
+            main {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .page {
+                padding-top: 35px;
+            }
+
+            .hero h1 {
+                font-size: 43px;
+
+                letter-spacing: -2px;
+            }
+
+            .stats {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .prices {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .section-header h2 {
+                font-size: 29px;
+            }
+
+            .price {
+                font-size: 29px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     HEADER
+========================================== -->
+
+<header>
+
+    <div class="navbar">
+
+
+        <div
+            class="logo"
+            onclick="navigate('/')"
+        >
+
+            <div class="logo-icon">
+                M
+            </div>
+
+            <div class="logo-text">
+
+                Manox Hub
+
+                <span>
+                    Official Website
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav
+            id="nav"
+            class="nav"
+        >
+
+            <button
+                data-route="/buy-admin"
+                onclick="navigate('/buy-admin')"
+            >
+                🛒 Comprar Painel
+            </button>
+
+
+            <button
+                data-route="/dashboard"
+                onclick="navigate('/dashboard')"
+            >
+                📊 Dashboard
+            </button>
+
+
+            <button
+                data-route="/support"
+                onclick="navigate('/support')"
+            >
+                💬 Suporte
+            </button>
+
+
+            <button
+                data-route="/script"
+                onclick="navigate('/script')"
+            >
+                📜 Script / Hub
+            </button>
+
+
+            <button
+                data-route="/youtube"
+                onclick="navigate('/youtube')"
+            >
+                ▶️ YouTube
+            </button>
+
+        </nav>
+
+
+        <button
+            class="menu-button"
+            onclick="toggleMenu()"
+        >
+            ☰
+        </button>
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+<!-- =========================================
+     HOME
+========================================== -->
+
+<section
+    id="page-home"
+    class="page"
+>
+
+    <div class="hero">
+
+        <div class="badge">
+
+            <span class="badge-dot"></span>
+
+            Manox Hub Online
+
+        </div>
+
+
+        <h1>
+
+            O seu
+
+            <span class="gradient-text">
+                painel
+            </span>
+
+            para Roblox.
+
+        </h1>
+
+
+        <p>
+
+            Tenha acesso ao Manox Hub, acompanhe
+            estatísticas em tempo real, encontre
+            nossos scripts e entre em contato com
+            o suporte.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <button
+                class="button primary"
+                onclick="navigate('/buy-admin')"
+            >
+                🛒 Comprar Painel
+            </button>
+
+
+            <button
+                class="button"
+                onclick="navigate('/dashboard')"
+            >
+                📊 Ver Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                🛒
+            </div>
+
+            <h3>
+                Painel Admin
+            </h3>
+
+            <p>
+                Adquira o painel administrativo
+                do Manox Hub.
+            </p>
+
+            <button
+                class="button card-button"
+                onclick="navigate('/buy-admin')"
+            >
+                Ver preços
+            </button>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                📊
+            </div>
+
+            <h3>
+                Dashboard
+            </h3>
+
+            <p>
+                Veja usuários online,
+                execuções e estatísticas.
+            </p>
+
+            <button
+                class="button card-button"
+                onclick="navigate('/dashboard')"
+            >
+                Abrir dashboard
+            </button>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                💬
+            </div>
+
+            <h3>
+                Suporte
+            </h3>
+
+            <p>
+                Precisa de ajuda? Entre em
+                contato com nossa equipe.
+            </p>
+
+            <button
+                class="button card-button"
+                onclick="navigate('/support')"
+            >
+                Acessar suporte
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     BUY ADMIN
+========================================== -->
+
+<section
+    id="page-buy-admin"
+    class="page"
+>
+
+    <div class="section-header">
+
+        <h2>
+            Comprar Painel Admin
+        </h2>
+
+        <p>
+            Escolha o período de acesso ao painel.
+        </p>
+
+    </div>
+
+
+    <div class="prices">
+
+
+        <div class="price-card">
+
+            <div class="price-icon">
+                🟢
+            </div>
+
+            <h3>
+                Básico
+            </h3>
+
+            <div class="duration">
+                5 dias de acesso
+            </div>
+
+            <div class="price">
+                R$ 3
+            </div>
+
+            <button
+                class="button primary price-button"
+                onclick="buyPlan('R$3 - 5 dias')"
+            >
+                Comprar
+            </button>
+
+        </div>
+
+
+        <div class="price-card">
+
+            <div class="price-icon">
+                🔵
+            </div>
+
+            <h3>
+                Semanal
+            </h3>
+
+            <div class="duration">
+                7 dias de acesso
+            </div>
+
+            <div class="price">
+                R$ 5
+            </div>
+
+            <button
+                class="button primary price-button"
+                onclick="buyPlan('R$5 - 7 dias')"
+            >
+                Comprar
+            </button>
+
+        </div>
+
+
+        <div class="price-card">
+
+            <div class="price-icon">
+                🟣
+            </div>
+
+            <h3>
+                Quinzenal
+            </h3>
+
+            <div class="duration">
+                15 dias de acesso
+            </div>
+
+            <div class="price">
+                R$ 12
+            </div>
+
+            <button
+                class="button primary price-button"
+                onclick="buyPlan('R$12 - 15 dias')"
+            >
+                Comprar
+            </button>
+
+        </div>
+
+
+        <div class="price-card featured">
+
+            <div class="popular">
+                POPULAR
+            </div>
+
+            <div class="price-icon">
+                🟡
+            </div>
+
+            <h3>
+                Mensal
+            </h3>
+
+            <div class="duration">
+                1 mês de acesso
+            </div>
+
+            <div class="price">
+                R$ 15
+            </div>
+
+            <button
+                class="button primary price-button"
+                onclick="buyPlan('R$15 - 1 mês')"
+            >
+                Comprar
+            </button>
+
+        </div>
+
+
+        <div class="price-card">
+
+            <div class="price-icon">
+                🟠
+            </div>
+
+            <h3>
+                Bimestral
+            </h3>
+
+            <div class="duration">
+                2 meses de acesso
+            </div>
+
+            <div class="price">
+                R$ 25
+            </div>
+
+            <button
+                class="button primary price-button"
+                onclick="buyPlan('R$25 - 2 meses')"
+            >
+                Comprar
+            </button>
+
+        </div>
+
+
+        <div class="price-card">
+
+            <div class="price-icon">
+                🔴
+            </div>
+
+            <h3>
+                Premium
+            </h3>
+
+            <div class="duration">
+                4 meses de acesso
+            </div>
+
+            <div class="price">
+                R$ 35
+            </div>
+
+            <button
+                class="button primary price-button"
+                onclick="buyPlan('R$35 - 4 meses')"
+            >
+                Comprar
+            </button>
+
+        </div>
+
+
+        <div class="price-card featured">
+
+            <div class="popular">
+                MELHOR OFERTA
+            </div>
+
+            <div class="price-icon">
+                👑
+            </div>
+
+            <h3>
+                Permanente
+            </h3>
+
+            <div class="duration">
+                Acesso permanente
+            </div>
+
+            <div class="price">
+                R$ 60
+            </div>
+
+            <button
+                class="button primary price-button"
+                onclick="buyPlan('R$60 - Permanente')"
+            >
+                Comprar
+            </button>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     DASHBOARD
+========================================== -->
+
+<section
+    id="page-dashboard"
+    class="page"
+>
+
+    <div class="section-header">
+
+        <h2>
+            Dashboard
+        </h2>
+
+        <p>
+            Estatísticas atualizadas automaticamente.
+        </p>
+
+    </div>
+
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🟢
+            </div>
+
+            <div class="stat-label">
+                Usuários Online
+            </div>
+
+            <div
+                id="onlineCount"
+                class="stat-value"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div class="stat-label">
+                Usuários
+            </div>
+
+            <div
+                id="usersCount"
+                class="stat-value"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ⚡
+            </div>
+
+            <div class="stat-label">
+                Execuções Totais
+            </div>
+
+            <div
+                id="executions"
+                class="stat-value"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📡
+            </div>
+
+            <div class="stat-label">
+                Status da API
+            </div>
+
+            <div
+                id="apiStatus"
+                class="stat-value"
+            >
+                —
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <div class="panel-title">
+                        Usuários Online
+                    </div>
+
+                    <div class="panel-subtitle">
+                        Atualização automática
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="refreshButton"
+                    class="refresh"
+                    onclick="loadDashboard()"
+                >
+                    ↻ Atualizar
+                </button>
+
+            </div>
+
+
+            <div class="search">
+
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="Pesquisar usuário..."
+                    oninput="filterUsers()"
+                >
+
+            </div>
+
+
+            <div
+                id="users"
+                class="users"
+            >
+
+                <div style="
+                    padding:35px;
+                    text-align:center;
+                    color:#777;
+                ">
+                    Carregando...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <div class="panel-title">
+                        Sistema
+                    </div>
+
+                    <div class="panel-subtitle">
+                        Informações da API
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="system">
+
+                <div class="system-row">
+
+                    <span class="system-label">
+                        API
+                    </span>
+
+                    <span
+                        id="systemApi"
+                        class="system-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="system-row">
+
+                    <span class="system-label">
+                        Última atualização
+                    </span>
+
+                    <span
+                        id="lastUpdate"
+                        class="system-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="system-row">
+
+                    <span class="system-label">
+                        Atualização
+                    </span>
+
+                    <span class="system-value">
+                        10 segundos
+                    </span>
+
+                </div>
+
+
+                <div class="system-row">
+
+                    <span class="system-label">
+                        Online
+                    </span>
+
+                    <span
+                        id="systemOnline"
+                        class="system-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="system-row">
+
+                    <span class="system-label">
+                        Execuções
+                    </span>
+
+                    <span
+                        id="systemExecutions"
+                        class="system-value"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     SUPPORT
+========================================== -->
+
+<section
+    id="page-support"
+    class="page"
+>
+
+    <div class="support-box">
+
+        <div class="support-icon">
+            💬
+        </div>
+
+        <h2>
+            Precisa de suporte?
+        </h2>
+
+        <p>
+            Entre em contato com a equipe do
+            Manox Hub para tirar dúvidas,
+            resolver problemas ou obter ajuda.
+        </p>
+
+        <div class="support-buttons">
+
+            <button
+                class="button primary"
+                onclick="openLink(LINKS.support)"
+            >
+                💬 Abrir Suporte
+            </button>
+
+            <button
+                class="button"
+                onclick="navigate('/youtube')"
+            >
+                ▶️ YouTube
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     SCRIPT
+========================================== -->
+
+<section
+    id="page-script"
+    class="page"
+>
+
+    <div class="section-header">
+
+        <h2>
+            Script / Hub
+        </h2>
+
+        <p>
+            Acesso ao script oficial do Manox Hub.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-icon">
+            📜
+        </div>
+
+        <h3>
+            Manox Hub
+        </h3>
+
+        <p>
+            Copie o código abaixo para executar
+            o Hub.
+        </p>
+
+
+        <div
+            class="code"
+            style="margin-top:20px"
+        >
+
+            <pre id="scriptCode"></pre>
+
+        </div>
+
+
+        <button
+            class="button primary"
+            style="margin-top:13px"
+            onclick="copyScript()"
+        >
+            📋 Copiar Script
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     YOUTUBE
+========================================== -->
+
+<section
+    id="page-youtube"
+    class="page"
+>
+
+    <div class="youtube-card">
+
+        <div class="youtube-icon">
+            ▶️
+        </div>
+
+        <h2>
+            Canal do Manox Hub
+        </h2>
+
+        <p>
+            Confira tutoriais, novidades,
+            atualizações e conteúdos do
+            Manox Hub.
+        </p>
+
+        <div style="margin-top:25px">
+
+            <button
+                class="button primary"
+                onclick="openLink(LINKS.youtube)"
+            >
+                Abrir YouTube
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+    Manox Hub © 2026 · Todos os direitos reservados.
+
+</footer>
+
+
+<script>
+
+
+/* =========================================
+   CONFIGURAÇÃO
+========================================= */
+
+const LINKS = {
+
+    /*
+     * ALTERE ESTES LINKS
+     */
+
+    buy:
+        "https://discord.gg/PceHMJ7kZ",
+
+    support:
+        "https://discord.gg/PceHMJ7kZ",
+
+    youtube:
+        "https://www.youtube.com/@manoxhub",
+
+    script:
+        "https://raw.githubusercontent.com/JAGAMES94ez/Manox-Hub/refs/heads/main/Brookhaven"
+
+};
+
+
+/* =========================================
+   API
+========================================= */
+
+const API_URL =
+    "https://users-data.manoxhub.workers.dev/api/manox/users";
+
+const REFRESH_INTERVAL =
+    10000;
+
+let currentUsers = [];
+
+let dashboardLoaded = false;
+
+
+/* =========================================
+   ROTAS
+========================================= */
+
+const ROUTES = {
+
+    "/":
+        "home",
+
+    "/dashboard":
+        "dashboard",
+
+    "/buy-admin":
+        "buy-admin",
+
+    "/support":
+        "support",
+
+    "/script":
+        "script",
+
+    "/youtube":
+        "youtube"
+
+};
+
+
+function getRoute() {
+
+    let path =
+        window.location.pathname
+            .replace(/\/+$/, "");
+
+    if (path === "") {
+        path = "/";
+    }
+
+    return ROUTES[path]
+        ? path
+        : "/";
+
+}
+
+
+function navigate(path) {
+
+    if (!ROUTES[path]) {
+        path = "/";
+    }
+
+
+    history.pushState(
+        {},
+        "",
+        path
+    );
+
+
+    renderRoute();
+
+}
+
+
+function renderRoute() {
+
+    const path =
+        getRoute();
+
+
+    const page =
+        ROUTES[path];
+
+
+    document
+        .querySelectorAll(".page")
+        .forEach(element => {
+
+            element.classList.remove(
+                "active"
+            );
+
+        });
+
+
+    const selected =
+        document.getElementById(
+            "page-" + page
+        );
+
+
+    if (selected) {
+
+        selected.classList.add(
+            "active"
+        );
+
+    }
+
+
+    document
+        .querySelectorAll(".nav button")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "active",
+
+                button.dataset.route ===
+                    path
+
+            );
+
+        });
+
+
+    closeMenu();
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+
+    if (
+        path === "/dashboard" &&
+        !dashboardLoaded
+    ) {
+
+        dashboardLoaded = true;
+
+        loadDashboard();
+
+    }
+
+}
+
+
+window.addEventListener(
+    "popstate",
+    renderRoute
+);
+
+
+/* =========================================
+   MENU
+========================================= */
+
+function toggleMenu() {
+
+    document
+        .getElementById("nav")
+        .classList.toggle("open");
+
+}
+
+
+function closeMenu() {
+
+    document
+        .getElementById("nav")
+        .classList.remove("open");
+
+}
+
+
+/* =========================================
+   LINKS
+========================================= */
+
+function openLink(url) {
+
+    if (
+        !url ||
+        url.includes("SEU-") ||
+        url.includes("SEU_LINK")
+    ) {
+
+        alert(
+            "Configure este link no objeto LINKS do JavaScript."
+        );
+
+        return;
+
+    }
+
+
+    window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+    );
+
+}
+
+
+function buyPlan(plan) {
+
+    /*
+     * Por enquanto direciona para
+     * o link de compra.
+     *
+     * Você pode futuramente passar
+     * o plano para seu sistema de pagamento.
+     */
+
+    if (
+        !LINKS.buy ||
+        LINKS.buy.includes("SEU-")
+    ) {
+
+        alert(
+            "Plano selecionado: " +
+            plan +
+            "\n\nConfigure o link de compra no código."
+        );
+
+        return;
+
+    }
+
+
+    const separator =
+        LINKS.buy.includes("?")
+            ? "&"
+            : "?";
+
+
+    openLink(
+        LINKS.buy +
+        separator +
+        "plan=" +
+        encodeURIComponent(plan)
+    );
+
+}
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+async function loadDashboard() {
+
+    const button =
+        document.getElementById(
+            "refreshButton"
+        );
+
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+            "↻ Carregando...";
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method: "GET",
+
+                    cache: "no-store",
+
+                    headers: {
+                        "Accept":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        currentUsers =
+            normalizeUsers(
+                data.users
+            );
+
+
+        updateStats(
+            data
+        );
+
+
+        await renderUsers(
+            currentUsers
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro no Dashboard:",
+            error
+        );
+
+
+        setApiOffline();
+
+
+    } finally {
+
+        if (button) {
+
+            button.disabled = false;
+
+            button.textContent =
+                "↻ Atualizar";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================
+   NORMALIZAR USUÁRIOS
+========================================= */
+
+function normalizeUsers(users) {
+
+    if (!Array.isArray(users)) {
+
+        return [];
+
+    }
+
+
+    return users
+
+        .map(user => {
+
+            /*
+             * Caso a API retorne:
+             *
+             * "Joao123"
+             */
+
+            if (
+                typeof user ===
+                "string"
+            ) {
+
+                return user.trim();
+
+            }
+
+
+            /*
+             * Caso retorne:
+             *
+             * {
+             *   username: "Joao123"
+             * }
+             */
+
+            if (
+                typeof user ===
+                "object" &&
+                user !== null
+            ) {
+
+                return String(
+                    user.username ??
+                    user.name ??
+                    user.userName ??
+                    ""
+                ).trim();
+
+            }
+
+
+            return "";
+
+        })
+
+
+        .filter(Boolean)
+
+        .filter(
+            (username, index, array) =>
+                array.indexOf(username) === index
+        );
+
+}
+
+
+/* =========================================
+   STATS
+========================================= */
+
+function updateStats(data) {
+
+    const online =
+        Number(
+            data.onlineCount ?? 0
+        );
+
+
+    const executions =
+        Number(
+            data.totalExecutions ?? 0
+        );
+
+
+    document.getElementById(
+        "onlineCount"
+    ).textContent =
+        formatNumber(online);
+
+
+    document.getElementById(
+        "usersCount"
+    ).textContent =
+        formatNumber(
+            currentUsers.length
+        );
+
+
+    document.getElementById(
+        "executions"
+    ).textContent =
+        formatNumber(
+            executions
+        );
+
+
+    document.getElementById(
+        "systemOnline"
+    ).textContent =
+        formatNumber(
+            online
+        );
+
+
+    document.getElementById(
+        "systemExecutions"
+    ).textContent =
+        formatNumber(
+            executions
+        );
+
+
+    const status =
+        document.getElementById(
+            "apiStatus"
+        );
+
+
+    const system =
+        document.getElementById(
+            "systemApi"
+        );
+
+
+    if (
+        data.success === true
+    ) {
+
+        status.textContent =
+            "Online";
+
+        status.className =
+            "stat-value success";
+
+
+        system.textContent =
+            "Online";
+
+        system.className =
+            "system-value success";
+
+    } else {
+
+        status.textContent =
+            "Erro";
+
+        status.className =
+            "stat-value error";
+
+
+        system.textContent =
+            "Erro";
+
+        system.className =
+            "system-value error";
+
+    }
+
+
+    document.getElementById(
+        "lastUpdate"
+    ).textContent =
+        new Date()
+            .toLocaleTimeString(
+                "pt-BR"
+            );
+
+}
+
+
+/* =========================================
+   API OFFLINE
+========================================= */
+
+function setApiOffline() {
+
+    const status =
+        document.getElementById(
+            "apiStatus"
+        );
+
+
+    const system =
+        document.getElementById(
+            "systemApi"
+        );
+
+
+    status.textContent =
+        "Offline";
+
+    status.className =
+        "stat-value error";
+
+
+    system.textContent =
+        "Offline";
+
+    system.className =
+        "system-value error";
+
+
+    document.getElementById(
+        "users"
+    ).innerHTML = `
+
+        <div style="
+            padding:35px;
+            text-align:center;
+            color:#ff5268;
+        ">
+
+            ⚠️ Não foi possível
+            conectar à API.
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================
+   ROBLOX USER IDS
+========================================= */
+
+async function getRobloxUserIds(
+    usernames
+) {
+
+    const result = {};
+
+
+    if (
+        !usernames ||
+        usernames.length === 0
+    ) {
+
+        return result;
+
+    }
+
+
+    /*
+     * Roblox aceita até 100
+     * nomes por requisição.
+     */
+
+    const chunks = [];
+
+
+    for (
+        let i = 0;
+        i < usernames.length;
+        i += 100
+    ) {
+
+        chunks.push(
+            usernames.slice(
+                i,
+                i + 100
+            )
+        );
+
+    }
+
+
+    for (
+        const chunk of chunks
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    "https://users.roblox.com/v1/usernames/users",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            usernames:
+                                chunk,
+
+                            excludeBannedUsers:
+                                false
+                        })
+                    }
+                );
+
+
+            if (!response.ok) {
+                continue;
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !Array.isArray(
+                    data.data
+                )
+            ) {
+
+                continue;
+
+            }
+
+
+            data.data.forEach(
+                user => {
+
+                    /*
+                     * requestedUsername
+                     * pode preservar o nome
+                     * enviado pela API.
+                     */
+
+                    const requested =
+                        String(
+                            user.requestedUsername ??
+                            ""
+                        );
+
+
+                    const username =
+                        String(
+                            user.name ??
+                            ""
+                        );
+
+
+                    if (requested) {
+
+                        result[
+                            requested.toLowerCase()
+                        ] =
+                            user.id;
+
+                    }
+
+
+                    if (username) {
+
+                        result[
+                            username.toLowerCase()
+                        ] =
+                            user.id;
+
+                    }
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao buscar UserIds:",
+                error
+            );
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================
+   ROBLOX AVATARS
+========================================= */
+
+async function getRobloxAvatars(
+    userIds
+) {
+
+    const result = {};
+
+
+    if (
+        !userIds ||
+        userIds.length === 0
+    ) {
+
+        return result;
+
+    }
+
+
+    /*
+     * A API de thumbnails aceita
+     * vários IDs.
+     *
+     * Dividimos em blocos para
+     * evitar URLs gigantes.
+     */
+
+    const chunks = [];
+
+
+    for (
+        let i = 0;
+        i < userIds.length;
+        i += 100
+    ) {
+
+        chunks.push(
+            userIds.slice(
+                i,
+                i + 100
+            )
+        );
+
+    }
+
+
+    for (
+        const chunk of chunks
+    ) {
+
+        try {
+
+            const url =
+                "https://thumbnails.roblox.com/v1/users/avatar-headshot" +
+                "?userIds=" +
+                encodeURIComponent(
+                    chunk.join(",")
+                ) +
+                "&size=150x150" +
+                "&format=Png" +
+                "&isCircular=false";
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        cache:
+                            "no-store"
+                    }
+                );
+
+
+            if (!response.ok) {
+                continue;
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !Array.isArray(
+                    data.data
+                )
+            ) {
+
+                continue;
+
+            }
+
+
+            data.data.forEach(
+                avatar => {
+
+                    if (
+                        avatar.targetId &&
+                        avatar.imageUrl
+                    ) {
+
+                        result[
+                            String(
+                                avatar.targetId
+                            )
+                        ] =
+                            avatar.imageUrl;
+
+                    }
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao buscar avatar:",
+                error
+            );
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================
+   RENDER USERS
+========================================= */
+
+async function renderUsers(
+    list
+) {
+
+    const container =
+        document.getElementById(
+            "users"
+        );
+
+
+    if (
+        !list ||
+        list.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div style="
+                padding:35px;
+                text-align:center;
+                color:#777;
+            ">
+
+                Nenhum usuário encontrado.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+
+        <div style="
+            padding:30px;
+            text-align:center;
+            color:#777;
+        ">
+
+            Carregando fotos dos jogadores...
+
+        </div>
+
+    `;
+
+
+    const usernames =
+        list.map(
+            username =>
+                String(username)
+        );
+
+
+    /*
+     * 1. Nome → UserId
+     */
+
+    const userIds =
+        await getRobloxUserIds(
+            usernames
+        );
+
+
+    /*
+     * 2. UserId → Avatar
+     */
+
+    const ids =
+        [
+            ...new Set(
+                Object.values(
+                    userIds
+                )
+            )
+        ];
+
+
+    const avatars =
+        await getRobloxAvatars(
+            ids
+        );
+
+
+    container.innerHTML = "";
+
+
+    usernames.forEach(
+        username => {
+
+            const key =
+                username.toLowerCase();
+
+
+            const userId =
+                userIds[key];
+
+
+            const avatarUrl =
+                userId
+                    ? avatars[
+                        String(userId)
+                    ]
+                    : null;
+
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "user";
+
+
+            const letter =
+                username
+                    .charAt(0)
+                    .toUpperCase();
+
+
+            /*
+             * Não colocamos o username
+             * diretamente no HTML sem
+             * escapar.
+             */
+
+            const safeUsername =
+                escapeHTML(
+                    username
+                );
+
+
+            if (avatarUrl) {
+
+                element.innerHTML = `
+
+                    <div class="avatar">
+
+                        <img
+                            src="${escapeHTML(avatarUrl)}"
+                            alt="${safeUsername}"
+                            loading="lazy"
+                            referrerpolicy="no-referrer"
+                        >
+
+                    </div>
+
+
+                    <div class="user-info">
+
+                        <div class="username">
+
+                            ${safeUsername}
+
+                        </div>
+
+
+                        <div class="online">
+
+                            <span class="online-dot"></span>
+
+                            Online
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            } else {
+
+                element.innerHTML = `
+
+                    <div class="avatar">
+
+                        ${escapeHTML(letter)}
+
+                    </div>
+
+
+                    <div class="user-info">
+
+                        <div class="username">
+
+                            ${safeUsername}
+
+                        </div>
+
+
+                        <div class="online">
+
+                            <span class="online-dot"></span>
+
+                            Online
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            /*
+             * Se a imagem falhar,
+             * substitui pela inicial.
+             */
+
+            const image =
+                element.querySelector(
+                    ".avatar img"
+                );
+
+
+            if (image) {
+
+                image.addEventListener(
+                    "error",
+                    () => {
+
+                        const avatar =
+                            image.parentElement;
+
+
+                        avatar.innerHTML =
+                            escapeHTML(
+                                letter
+                            );
+
+                    }
+                );
+
+            }
+
+
+            container.appendChild(
+                element
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+function filterUsers() {
+
+    const input =
+        document.getElementById(
+            "searchInput"
+        );
+
+
+    const query =
+        input.value
+            .toLowerCase()
+            .trim();
+
+
+    const filtered =
+        currentUsers.filter(
+            username =>
+                String(username)
+                    .toLowerCase()
+                    .includes(query)
+        );
+
+
+    renderUsers(
+        filtered
+    );
+
+}
+
+
+/* =========================================
+   COPY SCRIPT
+========================================= */
+
+async function copyScript() {
+
+    const code =
+        document.getElementById(
+            "scriptCode"
+        ).textContent;
+
+
+    try {
+
+        await navigator.clipboard
+            .writeText(code);
+
+
+        alert(
+            "Script copiado!"
+        );
+
+    } catch {
+
+        alert(
+            "Não foi possível copiar automaticamente."
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   HELPERS
+========================================= */
+
+function formatNumber(
+    number
+) {
+
+    return Number(
+        number || 0
+    ).toLocaleString(
+        "pt-BR"
+    );
+
+}
+
+
+function escapeHTML(
+    value
+) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================
+   SCRIPT DO HUB
+========================================= */
+
+document.getElementById(
+    "scriptCode"
+).textContent =
+
+    `loadstring(game:HttpGet("${LINKS.script}"))()`;
+
+
+/* =========================================
+   INICIALIZAÇÃO
+========================================= */
+
+renderRoute();
+
+
+/*
+ * Atualiza o dashboard
+ * a cada 10 segundos.
+ */
+
+setInterval(
+    () => {
+
+        if (
+            getRoute() ===
+            "/dashboard"
+        ) {
+
+            loadDashboard();
+
+        }
+
+    },
+    REFRESH_INTERVAL
+);
+
+</script>
+
+</body>
+
+</html>
