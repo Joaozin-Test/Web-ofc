@@ -596,65 +596,47 @@ const statusElement =
    API
 ===================================================== */
 
-async function api(
-    endpoint,
-    options = {}
-) {
+async function api(endpoint, options = {}) {
 
-    if (!KEY) {
-
-        throw new Error(
-            "Key não informada."
-        );
-
+    if (!KEY || !KEY.trim()) {
+        throw new Error("NO_KEY");
     }
 
+    const response = await fetch(
+        API + endpoint,
+        {
+            ...options,
 
-    const response =
-        await fetch(
-            API + endpoint,
-            {
-                ...options,
-
-                headers: {
-                    "Content-Type":
-                        "application/json",
-
-                    "x-manox-key":
-                        KEY,
-
-                    ...(options.headers || {})
-                }
+            headers: {
+                "Content-Type": "application/json",
+                "x-manox-key": KEY.trim(),
+                ...(options.headers || {})
             }
-        );
-
+        }
+    );
 
     let data = {};
 
     try {
-
-        data =
-            await response.json();
-
-    } catch {}
-
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            data.message ||
-            "Erro HTTP " +
-            response.status
-        );
-
+        data = await response.json();
+    } catch {
+        data = {};
     }
 
+    // SOMENTE 401 significa Key inválida
+    if (response.status === 401) {
+        throw new Error("INVALID_KEY");
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            data.message ||
+            `Erro HTTP ${response.status}`
+        );
+    }
 
     return data;
-
 }
-
 
 /* =====================================================
    TOAST
@@ -1716,17 +1698,27 @@ async function clearServerChat() {
 
 async function loadAll() {
 
-    // Sem Key → volta para o início
+    // Não existe Key
     if (!KEY || !KEY.trim()) {
         window.location.replace("/");
         return;
     }
 
+    statusElement.textContent =
+        "🟡 Verificando Key...";
+
     try {
 
-        statusElement.textContent =
-            "🟡 Verificando...";
+        // Primeiro testa uma rota autenticada
+        await api(
+            "/api/manox/temp-admins"
+        );
 
+        // Key válida
+        statusElement.textContent =
+            "🟢 Administrador conectado";
+
+        // Agora carrega os dados
         await Promise.all([
             loadTemp(),
             loadAdmins(),
@@ -1734,19 +1726,30 @@ async function loadAll() {
             loadMessages()
         ]);
 
-        statusElement.textContent =
-            "🟢 Administrador conectado";
-
     } catch (error) {
 
         console.error(
-            "Erro de autenticação:",
+            "Erro no painel:",
             error
         );
 
-        // Key inválida / acesso negado
-        window.location.replace("/");
+        // Somente Key inválida volta para o início
+        if (
+            error.message === "INVALID_KEY" ||
+            error.message === "NO_KEY"
+        ) {
+            window.location.replace("/");
+            return;
+        }
 
+        // Outros erros NÃO devem expulsar o usuário
+        statusElement.textContent =
+            "🟠 Erro ao carregar dados";
+
+        toast(
+            "Erro ao carregar o painel: " +
+            error.message
+        );
     }
 }
 
