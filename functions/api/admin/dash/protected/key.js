@@ -4,140 +4,197 @@ const API_URL =
 const ALLOWED_ORIGIN =
     "https://manox-hub.pages.dev";
 
+
 function corsHeaders() {
+
     return {
-        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Content-Type": "application/json; charset=utf-8"
+        "Access-Control-Allow-Origin":
+            ALLOWED_ORIGIN,
+
+        "Access-Control-Allow-Methods":
+            "GET, POST, OPTIONS",
+
+        "Access-Control-Allow-Headers":
+            "Content-Type, x-admin-key",
+
+        "Content-Type":
+            "application/json; charset=utf-8"
     };
+
 }
 
+
 function json(data, status = 200) {
+
     return new Response(
         JSON.stringify(data),
         {
             status,
-            headers: corsHeaders()
+
+            headers:
+                corsHeaders()
         }
     );
+
 }
+
 
 async function getBody(request) {
+
     try {
+
         return await request.json();
+
     } catch {
+
         return {};
+
     }
+
 }
 
-async function apiFetch(path, options = {}) {
 
-    const response = await fetch(
-        `${API_URL}${path}`,
-        {
-            ...options,
+/*
+ * Envia a requisição para o Worker
+ * admin-data.
+ *
+ * A ADMIN_API_KEY não fica nesta Function.
+ */
 
-            headers: {
-                "Content-Type": "application/json",
+async function adminRequest(
+    path,
+    method,
+    adminKey,
+    body = null
+) {
 
-                "x-manox-key":
-                    options.apiKey,
+    const headers = {
 
-                ...(options.headers || {})
-            }
-        }
-    );
+        "Content-Type":
+            "application/json",
+
+        "x-manox-key":
+            adminKey
+
+    };
+
+
+    const options = {
+
+        method,
+
+        headers
+
+    };
+
+
+    if (body !== null) {
+
+        options.body =
+            JSON.stringify(body);
+
+    }
+
+
+    const response =
+        await fetch(
+            `${API_URL}${path}`,
+            options
+        );
+
 
     const text =
         await response.text();
 
+
     let data;
 
+
     try {
-        data = JSON.parse(text);
+
+        data =
+            JSON.parse(text);
+
     } catch {
+
         data = {
-            success: response.ok,
-            message: text
+            success:
+                response.ok,
+
+            message:
+                text
         };
+
     }
+
 
     return {
         response,
         data
     };
+
 }
 
+
+
+/* =====================================================
+   OPTIONS
+===================================================== */
 
 export async function onRequestOptions() {
 
-    return new Response(null, {
-        status: 204,
-        headers: corsHeaders()
-    });
+    return new Response(
+        null,
+        {
+            status: 204,
+            headers:
+                corsHeaders()
+        }
+    );
 
 }
 
 
-export async function onRequest(context) {
 
-    const {
-        request,
-        env
-    } = context;
+/* =====================================================
+   MAIN
+===================================================== */
+
+export async function onRequest(
+    context
+) {
+
+    const request =
+        context.request;
+
 
     /*
-     * A chave fica somente no Cloudflare.
+     * Aceitar a chave enviada pelo
+     * admin.html.
      */
-
-    const ADMIN_API_KEY =
-        env.ADMIN_API_KEY;
-
-    if (!ADMIN_API_KEY) {
-
-        return json(
-            {
-                success: false,
-                message:
-                    "ADMIN_API_KEY não configurada no Cloudflare."
-            },
-            500
-        );
-
-    }
-
 
     const body =
         await getBody(request);
 
-    /*
-     * O navegador envia a chave
-     * somente para autenticação inicial.
-     */
 
-    const suppliedKey =
+    const adminKey =
         body.key ||
         request.headers.get(
             "x-admin-key"
         );
 
 
-    /*
-     * Verificar a chave.
-     */
-
-    if (
-        !suppliedKey ||
-        suppliedKey !== ADMIN_API_KEY
-    ) {
+    if (!adminKey) {
 
         return json(
             {
                 success: false,
-                authenticated: false,
+
+                authenticated:
+                    false,
+
                 message:
-                    "ADMIN_API_KEY inválida."
+                    "ADMIN_API_KEY não fornecida."
             },
             401
         );
@@ -145,20 +202,45 @@ export async function onRequest(context) {
     }
 
 
-    /*
-     * GET = retornar todos os dados
-     */
 
-    if (request.method === "GET") {
+    /* =================================================
+       GET
+       Carregar todos os roles
+    ================================================= */
+
+    if (
+        request.method === "GET"
+    ) {
 
         const result =
-            await apiFetch(
+            await adminRequest(
                 "/api/manox/all-roles",
-                {
-                    apiKey:
-                        ADMIN_API_KEY
-                }
+
+                "GET",
+
+                adminKey
             );
+
+
+        if (
+            result.response.status === 401 ||
+            result.response.status === 403
+        ) {
+
+            return json(
+                {
+                    success: false,
+
+                    authenticated:
+                        false,
+
+                    message:
+                        "ADMIN_API_KEY inválida."
+                },
+                401
+            );
+
+        }
 
 
         return json(
@@ -172,17 +254,22 @@ export async function onRequest(context) {
                 data:
                     result.data
             },
+
             result.response.status
         );
 
     }
 
 
-    /*
-     * POST = executar uma ação administrativa
-     */
 
-    if (request.method === "POST") {
+    /* =================================================
+       POST
+       Ações administrativas
+    ================================================= */
+
+    if (
+        request.method === "POST"
+    ) {
 
         const action =
             body.action;
@@ -192,191 +279,163 @@ export async function onRequest(context) {
             body.payload || {};
 
 
-        let endpoint;
+        let endpoint =
+            null;
 
 
         /*
          * TEMP ADMINS
          */
 
+        switch (action) {
+
+            case "temp-admin-add":
+
+                endpoint =
+                    "/api/manox/temp-admins/add";
+
+                break;
+
+
+            case "temp-admin-edit-expire":
+
+                endpoint =
+                    "/api/manox/temp-admins/edit-expire";
+
+                break;
+
+
+            case "temp-admin-remove":
+
+                endpoint =
+                    "/api/manox/temp-admins/remove";
+
+                break;
+
+
+
+            /*
+             * ADMINS
+             */
+
+            case "admin-list":
+
+                endpoint =
+                    "/api/manox/admins";
+
+                break;
+
+
+            case "admin-add":
+
+                endpoint =
+                    "/api/manox/admins/add";
+
+                break;
+
+
+            case "admin-remove":
+
+                endpoint =
+                    "/api/manox/admins/remove";
+
+                break;
+
+
+
+            /*
+             * OWNERS
+             */
+
+            case "owner-list":
+
+                endpoint =
+                    "/api/manox/owners";
+
+                break;
+
+
+            case "owner-add":
+
+                endpoint =
+                    "/api/manox/owners/add";
+
+                break;
+
+
+            case "owner-remove":
+
+                endpoint =
+                    "/api/manox/owners/remove";
+
+                break;
+
+
+            default:
+
+                return json(
+                    {
+                        success: false,
+
+                        message:
+                            "Ação administrativa desconhecida."
+                    },
+                    400
+                );
+
+        }
+
+
+
+        const method =
+            action === "admin-list" ||
+            action === "owner-list"
+
+                ? "GET"
+
+                : "POST";
+
+
+
+        const result =
+            await adminRequest(
+                endpoint,
+
+                method,
+
+                adminKey,
+
+                method === "POST"
+                    ? payload
+                    : null
+            );
+
+
+
+        /*
+         * A API rejeitou a chave.
+         */
+
         if (
-            action ===
-            "temp-admin-add"
+            result.response.status === 401 ||
+            result.response.status === 403
         ) {
-
-            endpoint =
-                "/api/manox/temp-admins/add";
-
-        }
-
-        else if (
-            action ===
-            "temp-admin-edit-expire"
-        ) {
-
-            endpoint =
-                "/api/manox/temp-admins/edit-expire";
-
-        }
-
-        else if (
-            action ===
-            "temp-admin-remove"
-        ) {
-
-            endpoint =
-                "/api/manox/temp-admins/remove";
-
-        }
-
-
-        /*
-         * ADMINS PERMANENTES
-         */
-
-        else if (
-            action ===
-            "admin-list"
-        ) {
-
-            const result =
-                await apiFetch(
-                    "/api/manox/admins",
-                    {
-                        method: "GET",
-                        apiKey:
-                            ADMIN_API_KEY
-                    }
-                );
-
-            return json(
-                {
-                    success:
-                        result.response.ok,
-
-                    authenticated:
-                        true,
-
-                    data:
-                        result.data
-                },
-                result.response.status
-            );
-
-        }
-
-        else if (
-            action ===
-            "admin-add"
-        ) {
-
-            endpoint =
-                "/api/manox/admins/add";
-
-        }
-
-        else if (
-            action ===
-            "admin-remove"
-        ) {
-
-            endpoint =
-                "/api/manox/admins/remove";
-
-        }
-
-
-        /*
-         * OWNERS
-         */
-
-        else if (
-            action ===
-            "owner-list"
-        ) {
-
-            const result =
-                await apiFetch(
-                    "/api/manox/owners",
-                    {
-                        method: "GET",
-                        apiKey:
-                            ADMIN_API_KEY
-                    }
-                );
-
-            return json(
-                {
-                    success:
-                        result.response.ok,
-
-                    authenticated:
-                        true,
-
-                    data:
-                        result.data
-                },
-                result.response.status
-            );
-
-        }
-
-        else if (
-            action ===
-            "owner-add"
-        ) {
-
-            endpoint =
-                "/api/manox/owners/add";
-
-        }
-
-        else if (
-            action ===
-            "owner-remove"
-        ) {
-
-            endpoint =
-                "/api/manox/owners/remove";
-
-        }
-
-
-        /*
-         * AÇÃO DESCONHECIDA
-         */
-
-        else {
 
             return json(
                 {
                     success: false,
+
+                    authenticated:
+                        false,
+
                     message:
-                        "Ação administrativa desconhecida."
+                        "ADMIN_API_KEY inválida."
                 },
-                400
+                401
             );
 
         }
 
-
-        /*
-         * Executar ação na API.
-         */
-
-        const result =
-            await apiFetch(
-                endpoint,
-                {
-                    method: "POST",
-
-                    apiKey:
-                        ADMIN_API_KEY,
-
-                    body:
-                        JSON.stringify(payload)
-                }
-            );
 
 
         return json(
@@ -390,18 +449,22 @@ export async function onRequest(context) {
                 data:
                     result.data
             },
+
             result.response.status
         );
 
     }
 
 
+
     return json(
         {
             success: false,
+
             message:
                 "Método não permitido."
         },
+
         405
     );
 
