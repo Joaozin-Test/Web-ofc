@@ -1,0 +1,2608 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Manox Hub — Administração</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                Inter,
+                Arial,
+                sans-serif;
+
+            background:
+                #0b0d12;
+
+            color:
+                #ffffff;
+
+            min-height: 100vh;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           LOGIN
+        ========================= */
+
+        #loginScreen {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+
+            background:
+                #12151d;
+
+            border:
+                1px solid #252a36;
+
+            border-radius:
+                20px;
+
+            padding:
+                30px;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, .35);
+        }
+
+        .logo {
+            width: 64px;
+            height: 64px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 18px;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+
+            font-size: 30px;
+        }
+
+        .login-card h1 {
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .login-card p {
+            text-align: center;
+            color: #9299a8;
+            margin-bottom: 25px;
+        }
+
+        .input {
+            width: 100%;
+
+            border:
+                1px solid #2b3140;
+
+            background:
+                #0d1016;
+
+            color:
+                white;
+
+            border-radius:
+                12px;
+
+            padding:
+                13px 14px;
+
+            outline: none;
+        }
+
+        .input:focus {
+            border-color:
+                #7c3aed;
+        }
+
+        .btn {
+            border: 0;
+
+            border-radius:
+                11px;
+
+            padding:
+                11px 16px;
+
+            color:
+                white;
+
+            background:
+                #252b38;
+
+            transition:
+                .2s;
+        }
+
+        .btn:hover {
+            transform:
+                translateY(-1px);
+
+            filter:
+                brightness(1.15);
+        }
+
+        .btn-primary {
+            width: 100%;
+
+            margin-top: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+        }
+
+        .error {
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 11px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(239, 68, 68, .12);
+
+            border:
+                1px solid rgba(239, 68, 68, .3);
+
+            color:
+                #fca5a5;
+
+            font-size: 14px;
+        }
+
+        /* =========================
+           APP
+        ========================= */
+
+        #app {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 70px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding:
+                0 22px;
+
+            background:
+                #11141b;
+
+            border-bottom:
+                1px solid #242936;
+
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-weight:
+                700;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+                );
+        }
+
+        .logout {
+            color:
+                #fca5a5;
+
+            background:
+                rgba(239, 68, 68, .1);
+        }
+
+        .layout {
+            display: flex;
+            min-height:
+                calc(100vh - 70px);
+        }
+
+        .sidebar {
+            width: 235px;
+
+            padding: 18px;
+
+            background:
+                #0f1218;
+
+            border-right:
+                1px solid #242936;
+        }
+
+        .nav-title {
+            color:
+                #626a79;
+
+            font-size:
+                11px;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                1px;
+
+            margin:
+                10px 10px;
+        }
+
+        .nav-btn {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+
+            padding:
+                12px;
+
+            margin-bottom:
+                6px;
+
+            border: 0;
+
+            border-radius:
+                10px;
+
+            color:
+                #aab1bf;
+
+            background:
+                transparent;
+
+            text-align:
+                left;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            color:
+                white;
+
+            background:
+                #1b202b;
+        }
+
+        .content {
+            flex: 1;
+
+            padding:
+                25px;
+
+            overflow:
+                auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-title {
+            margin-bottom:
+                22px;
+        }
+
+        .page-title h2 {
+            font-size:
+                25px;
+        }
+
+        .page-title p {
+            color:
+                #7e8797;
+
+            margin-top:
+                5px;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .stats {
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    3,
+                    minmax(0, 1fr)
+                );
+
+            gap:
+                15px;
+
+            margin-bottom:
+                22px;
+        }
+
+        .stat {
+            background:
+                #12161e;
+
+            border:
+                1px solid #262c38;
+
+            border-radius:
+                15px;
+
+            padding:
+                20px;
+        }
+
+        .stat-icon {
+            font-size:
+                25px;
+
+            margin-bottom:
+                10px;
+        }
+
+        .stat-name {
+            color:
+                #7e8797;
+
+            font-size:
+                13px;
+        }
+
+        .stat-value {
+            font-size:
+                27px;
+
+            font-weight:
+                700;
+
+            margin-top:
+                5px;
+        }
+
+        /* =========================
+           PANEL
+        ========================= */
+
+        .panel {
+            background:
+                #12161e;
+
+            border:
+                1px solid #262c38;
+
+            border-radius:
+                15px;
+
+            padding:
+                20px;
+
+            margin-bottom:
+                18px;
+        }
+
+        .panel-header {
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                12px;
+
+            margin-bottom:
+                18px;
+        }
+
+        .panel-header h3 {
+            font-size:
+                17px;
+        }
+
+        .form-row {
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 180px auto;
+
+            gap:
+                10px;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-wrap {
+            overflow-x:
+                auto;
+        }
+
+        table {
+            width:
+                100%;
+
+            border-collapse:
+                collapse;
+        }
+
+        th,
+        td {
+            padding:
+                13px 10px;
+
+            text-align:
+                left;
+
+            border-bottom:
+                1px solid #252b36;
+
+            white-space:
+                nowrap;
+        }
+
+        th {
+            color:
+                #747d8d;
+
+            font-size:
+                12px;
+
+            text-transform:
+                uppercase;
+        }
+
+        td {
+            color:
+                #dfe3eb;
+
+            font-size:
+                14px;
+        }
+
+        .badge {
+            display:
+                inline-block;
+
+            padding:
+                5px 9px;
+
+            border-radius:
+                999px;
+
+            font-size:
+                11px;
+
+            background:
+                rgba(34, 197, 94, .1);
+
+            color:
+                #86efac;
+        }
+
+        .actions {
+            display:
+                flex;
+
+            gap:
+                7px;
+        }
+
+        .btn-danger {
+            background:
+                rgba(239, 68, 68, .12);
+
+            color:
+                #fca5a5;
+        }
+
+        .btn-edit {
+            background:
+                rgba(59, 130, 246, .12);
+
+            color:
+                #93c5fd;
+        }
+
+        .empty {
+            text-align:
+                center;
+
+            padding:
+                30px;
+
+            color:
+                #687181;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+            position:
+                fixed;
+
+            inset:
+                0;
+
+            display:
+                none;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                20px;
+
+            background:
+                rgba(0, 0, 0, .7);
+
+            z-index:
+                100;
+        }
+
+        .modal.show {
+            display:
+                flex;
+        }
+
+        .modal-card {
+            width:
+                100%;
+
+            max-width:
+                430px;
+
+            background:
+                #151922;
+
+            border:
+                1px solid #2b3140;
+
+            border-radius:
+                17px;
+
+            padding:
+                22px;
+        }
+
+        .modal-card h3 {
+            margin-bottom:
+                17px;
+        }
+
+        .modal-actions {
+            display:
+                flex;
+
+            justify-content:
+                flex-end;
+
+            gap:
+                8px;
+
+            margin-top:
+                17px;
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        #toast {
+            position:
+                fixed;
+
+            right:
+                20px;
+
+            bottom:
+                20px;
+
+            padding:
+                13px 17px;
+
+            border-radius:
+                11px;
+
+            background:
+                #1b202b;
+
+            border:
+                1px solid #303746;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,.3);
+
+            display:
+                none;
+
+            z-index:
+                200;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media(max-width: 800px) {
+
+            .sidebar {
+                width:
+                    68px;
+
+                padding:
+                    10px;
+            }
+
+            .nav-btn {
+                justify-content:
+                    center;
+            }
+
+            .nav-btn span:last-child,
+            .nav-title {
+                display:
+                    none;
+            }
+
+            .brand-text {
+                display:
+                    none;
+            }
+
+            .stats {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .form-row {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .content {
+                padding:
+                    16px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<section id="loginScreen">
+
+    <div class="login-card">
+
+        <div class="logo">
+            🛡️
+        </div>
+
+        <h1>
+            Manox Administration
+        </h1>
+
+        <p>
+            Área administrativa protegida
+        </p>
+
+        <input
+            id="apiKey"
+            class="input"
+            type="password"
+            placeholder="ADMIN_API_KEY"
+            autocomplete="off"
+        >
+
+        <button
+            id="loginButton"
+            class="btn btn-primary"
+            onclick="login()"
+        >
+            Entrar
+        </button>
+
+        <div
+            id="loginError"
+            class="error"
+        ></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     APP
+===================================================== -->
+
+<div id="app">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡️
+            </div>
+
+            <span class="brand-text">
+                Manox Admin
+            </span>
+
+        </div>
+
+
+        <button
+            class="btn logout"
+            onclick="logout()"
+        >
+            Sair
+        </button>
+
+    </header>
+
+
+
+    <div class="layout">
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="nav-title">
+                Administração
+            </div>
+
+
+            <button
+                class="nav-btn active"
+                onclick="showPage('dashboard', this)"
+            >
+                <span>📊</span>
+                <span>Dashboard</span>
+            </button>
+
+
+            <button
+                class="nav-btn"
+                onclick="showPage('tempAdmins', this)"
+            >
+                <span>⏱️</span>
+                <span>Temp Admins</span>
+            </button>
+
+
+            <button
+                class="nav-btn"
+                onclick="showPage('admins', this)"
+            >
+                <span>👑</span>
+                <span>Admins</span>
+            </button>
+
+
+            <button
+                class="nav-btn"
+                onclick="showPage('owners', this)"
+            >
+                <span>💎</span>
+                <span>Owners</span>
+            </button>
+
+        </aside>
+
+
+
+        <!-- CONTENT -->
+
+        <main class="content">
+
+
+            <!-- =========================================
+                 DASHBOARD
+            ========================================== -->
+
+            <section
+                id="dashboard"
+                class="page active"
+            >
+
+                <div class="page-title">
+
+                    <h2>
+                        Dashboard
+                    </h2>
+
+                    <p>
+                        Visão geral das permissões do Manox Hub.
+                    </p>
+
+                </div>
+
+
+                <div class="stats">
+
+                    <div class="stat">
+
+                        <div class="stat-icon">
+                            💎
+                        </div>
+
+                        <div class="stat-name">
+                            Owners
+                        </div>
+
+                        <div
+                            id="ownerCount"
+                            class="stat-value"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <div class="stat-icon">
+                            👑
+                        </div>
+
+                        <div class="stat-name">
+                            Admins Permanentes
+                        </div>
+
+                        <div
+                            id="adminCount"
+                            class="stat-value"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <div class="stat-icon">
+                            ⏱️
+                        </div>
+
+                        <div class="stat-name">
+                            Temp Admins Ativos
+                        </div>
+
+                        <div
+                            id="tempAdminCount"
+                            class="stat-value"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Status da API
+                        </h3>
+
+                        <span
+                            id="apiStatus"
+                            class="badge"
+                        >
+                            Conectando...
+                        </span>
+
+                    </div>
+
+                    <p id="lastUpdate">
+                        —
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================================
+                 TEMP ADMINS
+            ========================================== -->
+
+            <section
+                id="tempAdmins"
+                class="page"
+            >
+
+                <div class="page-title">
+
+                    <h2>
+                        Admins Temporários
+                    </h2>
+
+                    <p>
+                        Gerencie administradores com tempo de expiração.
+                    </p>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Adicionar Temp Admin
+                        </h3>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <input
+                            id="tempUsername"
+                            class="input"
+                            placeholder="Username ou UserId"
+                        >
+
+                        <input
+                            id="tempDuration"
+                            class="input"
+                            type="number"
+                            min="1"
+                            value="60"
+                            placeholder="Minutos"
+                        >
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="addTempAdmin()"
+                        >
+                            Adicionar
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Temp Admins Ativos
+                        </h3>
+
+                        <button
+                            class="btn"
+                            onclick="loadRoles()"
+                        >
+                            🔄 Atualizar
+                        </button>
+
+                    </div>
+
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Expiração</th>
+                                    <th>Ações</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody
+                                id="tempAdminsTable"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================================
+                 ADMINS
+            ========================================== -->
+
+            <section
+                id="admins"
+                class="page"
+            >
+
+                <div class="page-title">
+
+                    <h2>
+                        Admins Permanentes
+                    </h2>
+
+                    <p>
+                        Gerencie os administradores permanentes.
+                    </p>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Adicionar Admin
+                        </h3>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <input
+                            id="adminUsername"
+                            class="input"
+                            placeholder="Username ou UserId"
+                        >
+
+                        <div></div>
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="addAdmin()"
+                        >
+                            Adicionar
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Admins
+                        </h3>
+
+                    </div>
+
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Ações</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody
+                                id="adminsTable"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================================
+                 OWNERS
+            ========================================== -->
+
+            <section
+                id="owners"
+                class="page"
+            >
+
+                <div class="page-title">
+
+                    <h2>
+                        Owners
+                    </h2>
+
+                    <p>
+                        Gerencie os donos do Manox Hub.
+                    </p>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Adicionar Owner
+                        </h3>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <input
+                            id="ownerUsername"
+                            class="input"
+                            placeholder="Username ou UserId"
+                        >
+
+                        <div></div>
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="addOwner()"
+                        >
+                            Adicionar
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Owners
+                        </h3>
+
+                    </div>
+
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Ações</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody
+                                id="ownersTable"
+                            ></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     EDIT MODAL
+===================================================== -->
+
+<div
+    id="editModal"
+    class="modal"
+>
+
+    <div class="modal-card">
+
+        <h3>
+            Editar expiração
+        </h3>
+
+        <p
+            id="editUser"
+            style="color:#8b94a4;margin-bottom:15px;"
+        ></p>
+
+        <input
+            id="editMinutes"
+            class="input"
+            type="number"
+            min="1"
+            placeholder="Adicionar minutos"
+        >
+
+        <div
+            class="modal-actions"
+        >
+
+            <button
+                class="btn"
+                onclick="closeModal()"
+            >
+                Cancelar
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="saveExpiration()"
+            >
+                Salvar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div id="toast"></div>
+
+
+
+<script>
+
+/* =====================================================
+   CONFIGURAÇÃO
+===================================================== */
+
+const API =
+    "/api/admin/dash/protected/key";
+
+
+let adminKey =
+    sessionStorage.getItem(
+        "manox_admin_key"
+    );
+
+
+let roles = {
+    owners: [],
+    admins: [],
+    tempAdmins: []
+};
+
+
+let editingUser = null;
+
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function login() {
+
+    const input =
+        document.getElementById(
+            "apiKey"
+        );
+
+    const button =
+        document.getElementById(
+            "loginButton"
+        );
+
+    const error =
+        document.getElementById(
+            "loginError"
+        );
+
+
+    const key =
+        input.value.trim();
+
+
+    if (!key) {
+
+        showLoginError(
+            "Digite a ADMIN_API_KEY."
+        );
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "Verificando...";
+
+
+    try {
+
+        const response =
+            await fetch(API, {
+
+                method:
+                    "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+                        key
+                    })
+
+            });
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.authenticated
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Chave inválida."
+            );
+
+        }
+
+
+        adminKey =
+            key;
+
+
+        sessionStorage.setItem(
+            "manox_admin_key",
+            key
+        );
+
+
+        openAdmin();
+
+
+    } catch (error) {
+
+        showLoginError(
+            error.message
+        );
+
+    } finally {
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Entrar";
+
+    }
+
+}
+
+
+
+function showLoginError(message) {
+
+    const error =
+        document.getElementById(
+            "loginError"
+        );
+
+    error.textContent =
+        message;
+
+    error.style.display =
+        "block";
+
+}
+
+
+
+function openAdmin() {
+
+    document.getElementById(
+        "loginScreen"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "app"
+    ).style.display =
+        "block";
+
+
+    loadRoles();
+
+}
+
+
+
+function logout() {
+
+    sessionStorage.removeItem(
+        "manox_admin_key"
+    );
+
+    adminKey =
+        null;
+
+    location.reload();
+
+}
+
+
+
+/* =====================================================
+   API
+===================================================== */
+
+async function api(action, payload = {}) {
+
+    const response =
+        await fetch(API, {
+
+            method:
+                "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json",
+
+                "x-admin-key":
+                    adminKey
+
+            },
+
+            body:
+                JSON.stringify({
+
+                    action,
+
+                    payload
+
+                })
+
+        });
+
+
+    if (
+        response.status === 401
+    ) {
+
+        logout();
+
+        throw new Error(
+            "Sessão expirada."
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.message ||
+            "Erro na API."
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+
+/* =====================================================
+   CARREGAR ROLES
+===================================================== */
+
+async function loadRoles() {
+
+    try {
+
+        const response =
+            await fetch(API, {
+
+                method:
+                    "GET",
+
+                headers: {
+
+                    "x-admin-key":
+                        adminKey
+
+                }
+
+            });
+
+
+        if (
+            response.status === 401
+        ) {
+
+            logout();
+
+            return;
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.message ||
+                "Não foi possível carregar os dados."
+            );
+
+        }
+
+
+        /*
+         * Algumas APIs retornam os dados
+         * diretamente e outras dentro de data.
+         */
+
+        roles =
+            result.data ||
+            result;
+
+
+        roles.owners =
+            roles.owners ||
+            [];
+
+
+        roles.admins =
+            roles.admins ||
+            [];
+
+
+        roles.tempAdmins =
+            roles.tempAdmins ||
+            [];
+
+
+        render();
+
+
+        document.getElementById(
+            "apiStatus"
+        ).textContent =
+            "Online";
+
+
+        document.getElementById(
+            "lastUpdate"
+        ).textContent =
+            "Última atualização: " +
+            new Date().toLocaleString(
+                "pt-BR"
+            );
+
+
+    } catch (error) {
+
+        document.getElementById(
+            "apiStatus"
+        ).textContent =
+            "Erro";
+
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function render() {
+
+    document.getElementById(
+        "ownerCount"
+    ).textContent =
+        roles.owners.length;
+
+
+    document.getElementById(
+        "adminCount"
+    ).textContent =
+        roles.admins.length;
+
+
+    document.getElementById(
+        "tempAdminCount"
+    ).textContent =
+        roles.tempAdmins.length;
+
+
+    renderTempAdmins();
+    renderAdmins();
+    renderOwners();
+
+}
+
+
+
+/* =====================================================
+   TEMP ADMINS
+===================================================== */
+
+function renderTempAdmins() {
+
+    const table =
+        document.getElementById(
+            "tempAdminsTable"
+        );
+
+
+    if (
+        roles.tempAdmins.length === 0
+    ) {
+
+        table.innerHTML = `
+            <tr>
+                <td
+                    colspan="3"
+                    class="empty"
+                >
+                    Nenhum Temp Admin ativo.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        roles.tempAdmins.map(
+            user => {
+
+                const username =
+                    getUsername(user);
+
+
+                const expires =
+                    getExpiration(user);
+
+
+                return `
+
+                    <tr>
+
+                        <td>
+                            ${escapeHTML(username)}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(expires)}
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="btn btn-edit"
+                                    onclick="editTempAdmin('${escapeJS(username)}')"
+                                >
+                                    Editar
+                                </button>
+
+                                <button
+                                    class="btn btn-danger"
+                                    onclick="removeTempAdmin('${escapeJS(username)}')"
+                                >
+                                    Remover
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+
+async function addTempAdmin() {
+
+    const username =
+        document.getElementById(
+            "tempUsername"
+        ).value.trim();
+
+
+    const duration =
+        Number(
+            document.getElementById(
+                "tempDuration"
+            ).value
+        );
+
+
+    if (!username) {
+
+        showToast(
+            "Digite o usuário."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !duration ||
+        duration < 1
+    ) {
+
+        showToast(
+            "Duração inválida."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await api(
+            "temp-admin-add",
+            {
+                username,
+                durationMinutes:
+                    duration
+            }
+        );
+
+
+        document.getElementById(
+            "tempUsername"
+        ).value = "";
+
+
+        showToast(
+            "Temp Admin adicionado."
+        );
+
+
+        await loadRoles();
+
+    } catch (error) {
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+
+function editTempAdmin(username) {
+
+    editingUser =
+        username;
+
+
+    document.getElementById(
+        "editUser"
+    ).textContent =
+        username;
+
+
+    document.getElementById(
+        "editMinutes"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "editModal"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+
+function closeModal() {
+
+    document.getElementById(
+        "editModal"
+    ).classList.remove(
+        "show"
+    );
+
+    editingUser =
+        null;
+
+}
+
+
+
+async function saveExpiration() {
+
+    if (!editingUser) {
+        return;
+    }
+
+
+    const minutes =
+        Number(
+            document.getElementById(
+                "editMinutes"
+            ).value
+        );
+
+
+    if (
+        !minutes ||
+        minutes < 1
+    ) {
+
+        showToast(
+            "Digite uma quantidade válida de minutos."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await api(
+            "temp-admin-edit-expire",
+            {
+                username:
+                    editingUser,
+
+                addMinutes:
+                    minutes
+            }
+        );
+
+
+        closeModal();
+
+
+        showToast(
+            "Expiração atualizada."
+        );
+
+
+        await loadRoles();
+
+    } catch (error) {
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+
+async function removeTempAdmin(username) {
+
+    if (
+        !confirm(
+            `Remover o Temp Admin "${username}"?`
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        await api(
+            "temp-admin-remove",
+            {
+                username
+            }
+        );
+
+
+        showToast(
+            "Temp Admin removido."
+        );
+
+
+        await loadRoles();
+
+    } catch (error) {
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   ADMINS
+===================================================== */
+
+function renderAdmins() {
+
+    const table =
+        document.getElementById(
+            "adminsTable"
+        );
+
+
+    if (
+        roles.admins.length === 0
+    ) {
+
+        table.innerHTML = `
+            <tr>
+                <td
+                    colspan="2"
+                    class="empty"
+                >
+                    Nenhum admin permanente.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        roles.admins.map(
+            user => {
+
+                const username =
+                    getUsername(user);
+
+
+                return `
+
+                    <tr>
+
+                        <td>
+                            ${escapeHTML(username)}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="btn btn-danger"
+                                onclick="removeAdmin('${escapeJS(username)}')"
+                            >
+                                Remover
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+
+async function addAdmin() {
+
+    const username =
+        document.getElementById(
+            "adminUsername"
+        ).value.trim();
+
+
+    if (!username) {
+
+        showToast(
+            "Digite o usuário."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await api(
+            "admin-add",
+            {
+                username
+            }
+        );
+
+
+        document.getElementById(
+            "adminUsername"
+        ).value = "";
+
+
+        showToast(
+            "Admin permanente adicionado."
+        );
+
+
+        await loadRoles();
+
+    } catch (error) {
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+
+async function removeAdmin(username) {
+
+    if (
+        !confirm(
+            `Remover "${username}" dos admins permanentes?`
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        await api(
+            "admin-remove",
+            {
+                username
+            }
+        );
+
+
+        showToast(
+            "Admin removido."
+        );
+
+
+        await loadRoles();
+
+    } catch (error) {
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   OWNERS
+===================================================== */
+
+function renderOwners() {
+
+    const table =
+        document.getElementById(
+            "ownersTable"
+        );
+
+
+    if (
+        roles.owners.length === 0
+    ) {
+
+        table.innerHTML = `
+            <tr>
+                <td
+                    colspan="2"
+                    class="empty"
+                >
+                    Nenhum owner.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        roles.owners.map(
+            user => {
+
+                const username =
+                    getUsername(user);
+
+
+                return `
+
+                    <tr>
+
+                        <td>
+                            ${escapeHTML(username)}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="btn btn-danger"
+                                onclick="removeOwner('${escapeJS(username)}')"
+                            >
+                                Remover
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+
+async function addOwner() {
+
+    const username =
+        document.getElementById(
+            "ownerUsername"
+        ).value.trim();
+
+
+    if (!username) {
+
+        showToast(
+            "Digite o usuário."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+            `Adicionar "${username}" como Owner?`
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        await api(
+            "owner-add",
+            {
+                username
+            }
+        );
+
+
+        document.getElementById(
+            "ownerUsername"
+        ).value = "";
+
+
+        showToast(
+            "Owner adicionado."
+        );
+
+
+        await loadRoles();
+
+    } catch (error) {
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+
+async function removeOwner(username) {
+
+    if (
+        !confirm(
+            `ATENÇÃO: remover "${username}" dos Owners?`
+        )
+    ) {
+        return;
+    }
+
+
+    try {
+
+        await api(
+            "owner-remove",
+            {
+                username
+            }
+        );
+
+
+        showToast(
+            "Owner removido."
+        );
+
+
+        await loadRoles();
+
+    } catch (error) {
+
+        showToast(
+            error.message
+        );
+
+    }
+
+}
+
+
+
+/* =====================================================
+   NAVEGAÇÃO
+===================================================== */
+
+function showPage(
+    page,
+    button
+) {
+
+    document.querySelectorAll(
+        ".page"
+    ).forEach(
+        element =>
+            element.classList.remove(
+                "active"
+            )
+    );
+
+
+    document.querySelectorAll(
+        ".nav-btn"
+    ).forEach(
+        element =>
+            element.classList.remove(
+                "active"
+            )
+    );
+
+
+    document.getElementById(
+        page
+    ).classList.add(
+        "active"
+    );
+
+
+    button.classList.add(
+        "active"
+    );
+
+}
+
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function getUsername(user) {
+
+    if (
+        typeof user === "string" ||
+        typeof user === "number"
+    ) {
+
+        return String(user);
+
+    }
+
+
+    return String(
+        user.username ??
+        user.userName ??
+        user.name ??
+        user.user_id ??
+        user.userId ??
+        user.id ??
+        "Desconhecido"
+    );
+
+}
+
+
+
+function getExpiration(user) {
+
+    const value =
+        user.expiresAt ??
+        user.expires_at ??
+        user.expiration ??
+        user.expires ??
+        user.expireAt;
+
+
+    if (!value) {
+        return "—";
+    }
+
+
+    const timestamp =
+        typeof value === "number"
+            ? value
+            : Date.parse(value);
+
+
+    if (
+        Number.isNaN(timestamp)
+    ) {
+
+        return String(value);
+
+    }
+
+
+    return new Date(
+        timestamp
+    ).toLocaleString(
+        "pt-BR"
+    );
+
+}
+
+
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+
+function escapeJS(value) {
+
+    return String(value)
+        .replaceAll("\\", "\\\\")
+        .replaceAll("'", "\\'")
+        .replaceAll("\n", "\\n")
+        .replaceAll("\r", "\\r");
+
+}
+
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.style.display =
+        "block";
+
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
+        setTimeout(
+            () => {
+                toast.style.display =
+                    "none";
+            },
+            3000
+        );
+
+}
+
+
+
+/* =====================================================
+   INICIALIZAÇÃO
+===================================================== */
+
+if (adminKey) {
+
+    openAdmin();
+
+}
+
+</script>
+
+</body>
+</html>
