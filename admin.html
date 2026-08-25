@@ -1,573 +1,976 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+    <title>Manox Hub — Administração</title>
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <meta
+        name="robots"
+        content="noindex, nofollow"
+    >
 
-<title>Manox Hub — Administração</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<style>
+        body {
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
 
-* {
-    box-sizing: border-box;
-}
+            background: #09090b;
+            color: #fff;
+            min-height: 100vh;
+        }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #08080d;
-    color: white;
-}
+        button,
+        input,
+        select {
+            font: inherit;
+        }
 
-button,
-input,
-textarea {
-    font: inherit;
-}
+        .app {
+            min-height: 100vh;
+            display: flex;
+        }
 
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-}
+        /* SIDEBAR */
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
+        .sidebar {
+            width: 250px;
+            background: #111113;
+            border-right: 1px solid #242428;
+            padding: 20px;
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 20;
+        }
 
-.logo {
-    font-size: 25px;
-    font-weight: 700;
-}
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 30px;
+        }
 
-.status {
-    padding: 8px 12px;
-    border-radius: 10px;
-    background: #15151d;
-    color: #aaa;
-}
+        .logo span {
+            color: #8b5cf6;
+        }
 
-.tabs {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    margin-bottom: 20px;
-}
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
 
-.tab {
-    border: 0;
-    background: #15151d;
-    color: #aaa;
-    padding: 12px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    white-space: nowrap;
-}
+        .nav button {
+            width: 100%;
+            text-align: left;
+            border: 0;
+            background: transparent;
+            color: #a1a1aa;
+            padding: 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: .2s;
+        }
 
-.tab.active {
-    background: #5865f2;
-    color: white;
-}
+        .nav button:hover,
+        .nav button.active {
+            background: #1d1d22;
+            color: white;
+        }
 
-.panel {
-    display: none;
-}
+        .logout {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
 
-.panel.active {
-    display: block;
-}
+        .logout button {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #303038;
+            border-radius: 9px;
+            background: transparent;
+            color: #aaa;
+            cursor: pointer;
+        }
 
-.card {
-    background: #111117;
-    border: 1px solid #23232d;
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
+        /* MAIN */
 
-.card h2 {
-    margin-top: 0;
-}
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 30px;
+        }
 
-.form {
-    display: grid;
-    grid-template-columns:
-        repeat(auto-fit, minmax(180px, 1fr));
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
 
-    gap: 10px;
-}
+        .topbar h1 {
+            font-size: 28px;
+        }
 
-input,
-textarea {
-    width: 100%;
-    border: 1px solid #292933;
-    background: #181820;
-    color: white;
-    border-radius: 9px;
-    padding: 12px;
-    outline: none;
-}
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #86efac;
+            font-size: 14px;
+        }
 
-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
 
-button {
-    border: 0;
-    border-radius: 9px;
-    padding: 11px 15px;
-    cursor: pointer;
-}
+        /* CARDS */
 
-.primary {
-    background: #5865f2;
-    color: white;
-}
+        .stats {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
 
-.danger {
-    background: #ed4245;
-    color: white;
-}
+            gap: 16px;
+            margin-bottom: 25px;
+        }
 
-.warning {
-    background: #faa61a;
-    color: black;
-}
+        .stat {
+            background: #111113;
+            border: 1px solid #242428;
+            border-radius: 14px;
+            padding: 20px;
+        }
 
-.secondary {
-    background: #252530;
-    color: white;
-}
+        .stat-title {
+            color: #a1a1aa;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
 
-.list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+        }
 
-.item {
-    background: #181820;
-    border: 1px solid #292933;
-    border-radius: 10px;
-    padding: 14px;
+        /* SECTIONS */
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-}
+        .section {
+            display: none;
+        }
 
-.info {
-    min-width: 0;
-}
+        .section.active {
+            display: block;
+        }
 
-.name {
-    font-weight: bold;
-    word-break: break-word;
-}
+        .panel {
+            background: #111113;
+            border: 1px solid #242428;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
 
-.small {
-    color: #888;
-    font-size: 12px;
-    margin-top: 4px;
-}
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
 
-.actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-}
+        .panel-header h2 {
+            font-size: 19px;
+        }
 
-.empty {
-    padding: 30px;
-    text-align: center;
-    color: #777;
-}
+        /* TABLE */
 
-.message {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
 
-    background: #181820;
-    border: 1px solid #30303a;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    padding: 13px 18px;
-    border-radius: 10px;
+        th,
+        td {
+            padding: 13px 10px;
+            text-align: left;
+            border-bottom: 1px solid #242428;
+            white-space: nowrap;
+        }
 
-    display: none;
-    z-index: 1000;
-}
+        th {
+            color: #a1a1aa;
+            font-size: 13px;
+        }
 
-@media(max-width:600px) {
+        td {
+            font-size: 14px;
+        }
 
-    .container {
-        padding: 12px;
-    }
+        /* FORM */
 
-    .header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
+        .form-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
 
-    .item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+            gap: 12px;
+        }
 
-    .actions {
-        width: 100%;
-    }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
 
-    .actions button {
-        flex: 1;
-    }
+        .field label {
+            color: #a1a1aa;
+            font-size: 13px;
+        }
 
-}
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 9px;
+            border: 1px solid #303038;
+            background: #09090b;
+            color: white;
+            outline: none;
+        }
 
-</style>
+        input:focus {
+            border-color: #8b5cf6;
+        }
 
+        .button {
+            border: 0;
+            border-radius: 9px;
+            padding: 11px 16px;
+            background: #7c3aed;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .button:hover {
+            background: #8b5cf6;
+        }
+
+        .button.danger {
+            background: #dc2626;
+        }
+
+        .button.secondary {
+            background: #27272a;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* BADGES */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #27272a;
+            color: #d4d4d8;
+        }
+
+        .badge.owner {
+            background: #422006;
+            color: #fbbf24;
+        }
+
+        .badge.admin {
+            background: #312e81;
+            color: #a5b4fc;
+        }
+
+        .badge.temp {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+
+        /* TOAST */
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            padding: 13px 17px;
+            background: #18181b;
+            border: 1px solid #303038;
+            border-radius: 10px;
+            display: none;
+            z-index: 100;
+            max-width: 350px;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.error {
+            border-color: #7f1d1d;
+        }
+
+        /* LOADING */
+
+        .loading {
+            opacity: .55;
+            pointer-events: none;
+        }
+
+        /* MOBILE */
+
+        .mobile-header {
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+                padding-top: 75px;
+            }
+
+            .mobile-header {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 60px;
+                background: #111113;
+                border-bottom: 1px solid #242428;
+                z-index: 30;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 18px;
+            }
+
+            .mobile-header button {
+                border: 0;
+                background: transparent;
+                color: white;
+                font-size: 24px;
+            }
+
+            .mobile-menu {
+                display: none;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: #111113;
+                padding: 12px;
+                z-index: 29;
+                border-bottom: 1px solid #242428;
+            }
+
+            .mobile-menu.show {
+                display: block;
+            }
+
+            .mobile-menu button {
+                width: 100%;
+                padding: 13px;
+                text-align: left;
+                border: 0;
+                background: transparent;
+                color: #bbb;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                gap: 10px;
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="mobile-header">
+    <strong>Manox <span>Admin</span></strong>
 
-<header class="header">
+    <button onclick="toggleMobileMenu()">
+        ☰
+    </button>
+</div>
 
-    <div class="logo">
-        ⚡ Manox Hub Admin
-    </div>
+<div
+    id="mobileMenu"
+    class="mobile-menu"
+>
+    <button onclick="showSection('dashboard')">
+        📊 Dashboard
+    </button>
 
-    <div
-        id="status"
-        class="status"
-    >
-        Conectando...
-    </div>
-
-</header>
-
-
-<nav class="tabs">
-
-    <button
-        class="tab active"
-        data-tab="temp">
+    <button onclick="showSection('temp')">
         ⏱️ Temp Admins
     </button>
 
-    <button
-        class="tab"
-        data-tab="admins">
-        🛡️ Admins
+    <button onclick="showSection('admins')">
+        🛡️ Admins Permanentes
     </button>
 
-    <button
-        class="tab"
-        data-tab="owners">
+    <button onclick="showSection('owners')">
         👑 Donos
     </button>
-
-    <button
-        class="tab"
-        data-tab="messages">
-        💬 Mensagens
-    </button>
-
-    <button
-        class="tab"
-        data-tab="chat">
-        🧹 Chat
-    </button>
-
-</nav>
+</div>
 
 
-<!-- =====================================================
-     TEMP ADMINS
-===================================================== -->
+<div class="app">
 
-<section
-    id="temp"
-    class="panel active">
+    <!-- SIDEBAR -->
 
-    <div class="card">
+    <aside class="sidebar">
 
-        <h2>
-            ⏱️ Adicionar Temp Admin
-        </h2>
+        <div class="logo">
+            Manox <span>Admin</span>
+        </div>
 
-        <div class="form">
-
-            <input
-                id="tempUsername"
-                placeholder="Username"
-            >
-
-            <input
-                id="tempMinutes"
-                type="number"
-                min="1"
-                value="60"
-                placeholder="Minutos"
-            >
+        <div class="nav">
 
             <button
-                class="primary"
-                onclick="addTemp()">
+                class="active"
+                data-section="dashboard"
+                onclick="showSection('dashboard')"
+            >
+                📊 Dashboard
+            </button>
 
-                Adicionar
+            <button
+                data-section="temp"
+                onclick="showSection('temp')"
+            >
+                ⏱️ Temp Admins
+            </button>
 
+            <button
+                data-section="admins"
+                onclick="showSection('admins')"
+            >
+                🛡️ Admins Permanentes
+            </button>
+
+            <button
+                data-section="owners"
+                onclick="showSection('owners')"
+            >
+                👑 Donos
             </button>
 
         </div>
 
-    </div>
-
-
-    <div class="card">
-
-        <h2>
-            Temp Admins Ativos
-        </h2>
-
-        <div
-            id="tempList"
-            class="list">
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     ADMINS
-===================================================== -->
-
-<section
-    id="admins"
-    class="panel">
-
-    <div class="card">
-
-        <h2>
-            🛡️ Adicionar Admin Permanente
-        </h2>
-
-        <div class="form">
-
-            <input
-                id="adminUsername"
-                placeholder="Username"
-            >
-
-            <button
-                class="primary"
-                onclick="addAdmin()">
-
-                Adicionar
-
+        <div class="logout">
+            <button onclick="logout()">
+                Sair
             </button>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
+                <p style="color:#71717a;margin-top:5px;">
+                    Gerenciamento do Manox Hub
+                </p>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                API conectada
+            </div>
 
         </div>
 
-    </div>
+
+        <!-- DASHBOARD -->
+
+        <section
+            id="section-dashboard"
+            class="section active"
+        >
+
+            <div class="stats">
+
+                <div class="stat">
+
+                    <div class="stat-title">
+                        Donos
+                    </div>
+
+                    <div
+                        id="ownersCount"
+                        class="stat-value"
+                    >
+                        —
+                    </div>
+
+                </div>
 
 
-    <div class="card">
+                <div class="stat">
 
-        <h2>
-            Admins Permanentes
-        </h2>
+                    <div class="stat-title">
+                        Admins Permanentes
+                    </div>
 
-        <div
-            id="adminList"
-            class="list">
-        </div>
+                    <div
+                        id="adminsCount"
+                        class="stat-value"
+                    >
+                        —
+                    </div>
 
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     OWNERS
-===================================================== -->
-
-<section
-    id="owners"
-    class="panel">
-
-    <div class="card">
-
-        <h2>
-            👑 Adicionar Dono
-        </h2>
-
-        <div class="form">
-
-            <input
-                id="ownerUsername"
-                placeholder="Username"
-            >
-
-            <button
-                class="primary"
-                onclick="addOwner()">
-
-                Adicionar
-
-            </button>
-
-        </div>
-
-    </div>
+                </div>
 
 
-    <div class="card">
+                <div class="stat">
 
-        <h2>
-            Donos
-        </h2>
+                    <div class="stat-title">
+                        Temp Admins Ativos
+                    </div>
 
-        <div
-            id="ownerList"
-            class="list">
-        </div>
+                    <div
+                        id="tempCount"
+                        class="stat-value"
+                    >
+                        —
+                    </div>
 
-    </div>
+                </div>
 
-</section>
-
-
-<!-- =====================================================
-     SYSTEM MESSAGES
-===================================================== -->
-
-<section
-    id="messages"
-    class="panel">
-
-    <div class="card">
-
-        <h2>
-            📢 Mensagem do Sistema
-        </h2>
-
-        <textarea
-            id="systemMessage"
-            maxlength="250"
-            placeholder="Digite a mensagem...">
-        </textarea>
-
-        <br><br>
-
-        <button
-            class="primary"
-            onclick="sendSystemMessage()">
-
-            Enviar mensagem
-
-        </button>
-
-    </div>
+            </div>
 
 
-    <div class="card">
+            <div class="panel">
 
-        <h2>
-            Histórico
-        </h2>
+                <div class="panel-header">
 
-        <div
-            id="messageList"
-            class="list">
-        </div>
+                    <h2>
+                        Status das permissões
+                    </h2>
 
-    </div>
+                    <button
+                        class="button secondary"
+                        onclick="loadAllRoles()"
+                    >
+                        Atualizar
+                    </button>
 
-</section>
+                </div>
 
+                <p
+                    id="dashboardStatus"
+                    style="color:#a1a1aa;"
+                >
+                    Carregando...
+                </p>
 
-<!-- =====================================================
-     CHAT
-===================================================== -->
+            </div>
 
-<section
-    id="chat"
-    class="panel">
-
-    <div class="card">
-
-        <h2>
-            🧹 Limpar Chat Global
-        </h2>
-
-        <p class="small">
-            Isso remove as mensagens do chat global.
-        </p>
-
-        <br>
-
-        <button
-            class="danger"
-            onclick="clearGlobalChat()">
-
-            Limpar Chat Global
-
-        </button>
-
-    </div>
+        </section>
 
 
-    <div class="card">
+        <!-- TEMP ADMINS -->
 
-        <h2>
-            🧹 Limpar Chat de Servidor
-        </h2>
+        <section
+            id="section-temp"
+            class="section"
+        >
 
-        <div class="form">
+            <div class="panel">
 
-            <input
-                id="serverId"
-                placeholder="JobId / Server ID"
-            >
+                <div class="panel-header">
 
-            <button
-                class="danger"
-                onclick="clearServerChat()">
+                    <h2>
+                        Adicionar Temp Admin
+                    </h2>
 
-                Limpar servidor
+                </div>
 
-            </button>
+                <form
+                    onsubmit="addTempAdmin(event)"
+                >
 
-        </div>
+                    <div class="form-grid">
 
-    </div>
+                        <div class="field">
 
-</section>
+                            <label>
+                                Username
+                            </label>
+
+                            <input
+                                id="tempUsername"
+                                placeholder="Player123"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                User ID
+                            </label>
+
+                            <input
+                                id="tempUserId"
+                                placeholder="Opcional"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Duração em minutos
+                            </label>
+
+                            <input
+                                id="tempDuration"
+                                type="number"
+                                min="1"
+                                value="60"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <button class="button">
+                        Adicionar Temp Admin
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Temp Admins
+                    </h2>
+
+                    <button
+                        class="button secondary"
+                        onclick="loadAllRoles()"
+                    >
+                        Atualizar
+                    </button>
+
+                </div>
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Usuário</th>
+                                <th>ID</th>
+                                <th>Expira em</th>
+                                <th>Ações</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tempTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ADMINS -->
+
+        <section
+            id="section-admins"
+            class="section"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Adicionar Admin Permanente
+                    </h2>
+
+                </div>
+
+                <form
+                    onsubmit="addAdmin(event)"
+                >
+
+                    <div class="form-grid">
+
+                        <div class="field">
+
+                            <label>
+                                Username
+                            </label>
+
+                            <input
+                                id="adminUsername"
+                                placeholder="Player123"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                User ID
+                            </label>
+
+                            <input
+                                id="adminUserId"
+                                placeholder="Opcional"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <button class="button">
+                        Adicionar Admin
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Admins Permanentes
+                    </h2>
+
+                    <button
+                        class="button secondary"
+                        onclick="loadAllRoles()"
+                    >
+                        Atualizar
+                    </button>
+
+                </div>
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Usuário</th>
+                                <th>ID</th>
+                                <th>Ações</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="adminsTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- OWNERS -->
+
+        <section
+            id="section-owners"
+            class="section"
+        >
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Adicionar Dono
+                    </h2>
+
+                </div>
+
+                <form
+                    onsubmit="addOwner(event)"
+                >
+
+                    <div class="form-grid">
+
+                        <div class="field">
+
+                            <label>
+                                Username
+                            </label>
+
+                            <input
+                                id="ownerUsername"
+                                placeholder="Player123"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                User ID
+                            </label>
+
+                            <input
+                                id="ownerUserId"
+                                placeholder="Opcional"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <br>
+
+                    <button class="button">
+                        Adicionar Dono
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <h2>
+                        Donos
+                    </h2>
+
+                    <button
+                        class="button secondary"
+                        onclick="loadAllRoles()"
+                    >
+                        Atualizar
+                    </button>
+
+                </div>
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Usuário</th>
+                                <th>ID</th>
+                                <th>Ações</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="ownersTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
 
 
 <div
     id="toast"
-    class="message">
-</div>
+    class="toast"
+></div>
 
 
 <script>
@@ -575,326 +978,545 @@ button {
 const API =
     "https://admin-data.josealessandrosst.workers.dev";
 
+/*
+ * Pegar Key da URL
+ */
 
 const params =
     new URLSearchParams(
-        location.search
+        window.location.search
     );
 
-
-const KEY =
+const ADMIN_KEY =
     params.get("Key");
 
 
-const statusElement =
-    document.getElementById(
-        "status"
+/*
+ * Não permitir abrir o painel
+ * sem Key.
+ */
+
+if (!ADMIN_KEY) {
+
+    document.body.innerHTML = `
+        <div style="
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#09090b;
+            color:white;
+            font-family:system-ui;
+            text-align:center;
+            padding:20px;
+        ">
+            <div>
+                <h1>🔒 Acesso negado</h1>
+
+                <p style="
+                    color:#a1a1aa;
+                    margin-top:10px;
+                ">
+                    Informe uma Key de administração.
+                </p>
+            </div>
+        </div>
+    `;
+
+    throw new Error(
+        "ADMIN_KEY não encontrada."
     );
 
-
-/* =====================================================
-   API
-===================================================== */
-
-async function api(endpoint, options = {}) {
-
-    if (!KEY || !KEY.trim()) {
-        throw new Error("NO_KEY");
-    }
-
-    const response = await fetch(
-        API + endpoint,
-        {
-            ...options,
-
-            headers: {
-                "Content-Type": "application/json",
-                "x-manox-key": KEY.trim(),
-                ...(options.headers || {})
-            }
-        }
-    );
-
-    let data = {};
-
-    try {
-        data = await response.json();
-    } catch {
-        data = {};
-    }
-
-    // SOMENTE 401 significa Key inválida
-    if (response.status === 401) {
-        throw new Error("INVALID_KEY");
-    }
-
-    if (!response.ok) {
-        throw new Error(
-            data.message ||
-            `Erro HTTP ${response.status}`
-        );
-    }
-
-    return data;
 }
 
-/* =====================================================
-   TOAST
-===================================================== */
 
-function toast(text) {
+/*
+ * Request autenticado
+ */
 
-    const element =
+async function api(
+    endpoint,
+    options = {}
+) {
+
+    const headers = {
+        "Content-Type":
+            "application/json",
+
+        "x-manox-key":
+            ADMIN_KEY,
+
+        ...(options.headers || {})
+    };
+
+
+    const response =
+        await fetch(
+            API + endpoint,
+            {
+                ...options,
+                headers
+            }
+        );
+
+
+    let data;
+
+    try {
+
+        data =
+            await response.json();
+
+    } catch {
+
+        data = {};
+
+    }
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.message ||
+            data.error ||
+            `HTTP ${response.status}`
+        );
+
+    }
+
+
+    if (
+        data.success === false
+    ) {
+
+        throw new Error(
+            data.message ||
+            "Operação recusada."
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+/*
+ * Toast
+ */
+
+function toast(
+    message,
+    error = false
+) {
+
+    const el =
         document.getElementById(
             "toast"
         );
 
+    el.textContent = message;
 
-    element.textContent =
-        text;
-
-
-    element.style.display =
-        "block";
-
+    el.className =
+        "toast show" +
+        (error ? " error" : "");
 
     setTimeout(() => {
 
-        element.style.display =
-            "none";
+        el.className = "toast";
 
-    }, 3000);
-
-}
-
-
-/* =====================================================
-   ESCAPE
-===================================================== */
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    }, 3500);
 
 }
 
 
-/* =====================================================
-   DATE
-===================================================== */
+/*
+ * Escape HTML
+ */
 
-function date(value) {
+function esc(value) {
 
-    if (!value)
+    return String(
+        value ?? ""
+    )
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/*
+ * Formatar data
+ */
+
+function formatDate(
+    value
+) {
+
+    if (!value) {
         return "—";
+    }
 
-
-    const d =
-        new Date(
-            Number(value)
-        );
-
+    const date =
+        new Date(value);
 
     if (
         Number.isNaN(
-            d.getTime()
+            date.getTime()
         )
     ) {
 
-        return String(value);
+        return esc(value);
 
     }
 
-
-    return d.toLocaleString(
+    return date.toLocaleString(
         "pt-BR"
     );
 
 }
 
 
-/* =====================================================
-   TABS
-===================================================== */
+/*
+ * Dashboard / navegação
+ */
 
-document
-    .querySelectorAll(".tab")
-    .forEach(tab => {
+function showSection(
+    name
+) {
 
-        tab.onclick = () => {
+    document
+        .querySelectorAll(
+            ".section"
+        )
+        .forEach(section => {
 
-            document
-                .querySelectorAll(".tab")
-                .forEach(x =>
-                    x.classList.remove(
-                        "active"
-                    )
-                );
-
-
-            document
-                .querySelectorAll(".panel")
-                .forEach(x =>
-                    x.classList.remove(
-                        "active"
-                    )
-                );
-
-
-            tab.classList.add(
+            section.classList.remove(
                 "active"
             );
 
-
-            document
-                .getElementById(
-                    tab.dataset.tab
-                )
-                .classList.add(
-                    "active"
-                );
-
-        };
-
-    });
+        });
 
 
-/* =====================================================
-   TEMP
-===================================================== */
-
-async function loadTemp() {
-
-    const data =
-        await api(
-            "/api/manox/temp-admins"
-        );
-
-
-    const list =
+    const target =
         document.getElementById(
-            "tempList"
+            "section-" + name
         );
 
+    if (target) {
 
-    list.innerHTML = "";
-
-
-    if (
-        !data.admins ||
-        !data.admins.length
-    ) {
-
-        list.innerHTML =
-            `<div class="empty">
-                Nenhum Temp Admin ativo.
-            </div>`;
-
-        return;
+        target.classList.add(
+            "active"
+        );
 
     }
 
 
-    data.admins.forEach(item => {
+    document
+        .querySelectorAll(
+            ".nav button"
+        )
+        .forEach(button => {
 
-        const username =
-            item.username;
-
-
-        const element =
-            document.createElement(
-                "div"
+            button.classList.toggle(
+                "active",
+                button.dataset.section === name
             );
 
-
-        element.className =
-            "item";
+        });
 
 
-        element.innerHTML = `
+    const titles = {
 
-            <div class="info">
+        dashboard:
+            "Dashboard",
 
-                <div class="name">
-                    ⏱️ ${escapeHTML(username)}
-                </div>
+        temp:
+            "Temp Admins",
 
-                <div class="small">
-                    Expira:
-                    ${escapeHTML(
-                        date(item.expires_at)
-                    )}
-                </div>
+        admins:
+            "Admins Permanentes",
 
-            </div>
+        owners:
+            "Donos"
 
-            <div class="actions">
-
-                <button
-                    class="warning"
-                    onclick="editTemp('${escapeHTML(username)}')">
-
-                    ✏️ Editar
-
-                </button>
-
-                <button
-                    class="danger"
-                    onclick="removeTemp('${escapeHTML(username)}')">
-
-                    🗑️ Remover
-
-                </button>
-
-            </div>
-
-        `;
+    };
 
 
-        list.appendChild(
-            element
+    document.getElementById(
+        "pageTitle"
+    ).textContent =
+        titles[name] || "Admin";
+
+
+    document
+        .getElementById(
+            "mobileMenu"
+        )
+        .classList.remove(
+            "show"
         );
 
-    });
+
+    if (
+        name === "dashboard" ||
+        name === "temp" ||
+        name === "admins" ||
+        name === "owners"
+    ) {
+
+        loadAllRoles();
+
+    }
 
 }
 
 
-async function addTemp() {
+function toggleMobileMenu() {
 
-    const username =
-        document
-            .getElementById(
-                "tempUsername"
+    document
+        .getElementById(
+            "mobileMenu"
+        )
+        .classList.toggle(
+            "show"
+        );
+
+}
+
+
+/*
+ * CARREGAR TODOS OS ROLES
+ */
+
+async function loadAllRoles() {
+
+    try {
+
+        const data =
+            await api(
+                "/api/manox/all-roles"
+            );
+
+
+        const owners =
+            Array.isArray(
+                data.owners
             )
-            .value
-            .trim();
+                ? data.owners
+                : [];
 
 
-    const minutes =
-        Number(
-            document
-                .getElementById(
-                    "tempMinutes"
-                )
-                .value
+        const admins =
+            Array.isArray(
+                data.admins
+            )
+                ? data.admins
+                : [];
+
+
+        const tempAdmins =
+            Array.isArray(
+                data.tempAdmins
+            )
+                ? data.tempAdmins
+                : [];
+
+
+        document.getElementById(
+            "ownersCount"
+        ).textContent =
+            owners.length;
+
+
+        document.getElementById(
+            "adminsCount"
+        ).textContent =
+            admins.length;
+
+
+        document.getElementById(
+            "tempCount"
+        ).textContent =
+            tempAdmins.length;
+
+
+        renderOwners(
+            owners
+        );
+
+        renderAdmins(
+            admins
+        );
+
+        renderTempAdmins(
+            tempAdmins
         );
 
 
-    if (!username) {
+        document.getElementById(
+            "dashboardStatus"
+        ).textContent =
+            "Dados atualizados com sucesso.";
+
+
+    } catch (error) {
+
+        document.getElementById(
+            "dashboardStatus"
+        ).textContent =
+            "Erro: " +
+            error.message;
+
 
         toast(
-            "Digite o username."
+            error.message,
+            true
         );
+
+    }
+
+}
+
+
+/*
+ * TEMP ADMINS
+ */
+
+function renderTempAdmins(
+    list
+) {
+
+    const table =
+        document.getElementById(
+            "tempTable"
+        );
+
+
+    if (!list.length) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="4"
+                    style="color:#71717a;">
+                    Nenhum Temp Admin ativo.
+                </td>
+            </tr>
+        `;
 
         return;
 
     }
+
+
+    table.innerHTML =
+        list.map(
+            (item, index) => {
+
+                const username =
+                    item.username ??
+                    item.name ??
+                    item.playerName ??
+                    "—";
+
+
+                const userId =
+                    item.userId ??
+                    item.user_id ??
+                    "—";
+
+
+                const expiresAt =
+                    item.expiresAt ??
+                    item.expires_at ??
+                    item.expireAt;
+
+
+                return `
+                    <tr>
+
+                        <td>
+                            <span class="badge temp">
+                                ⏱️ ${esc(username)}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${esc(userId)}
+                        </td>
+
+                        <td>
+                            ${formatDate(expiresAt)}
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="button secondary"
+                                    onclick="editTemp(${index})"
+                                >
+                                    Editar
+                                </button>
+
+                                <button
+                                    class="button danger"
+                                    onclick="removeTemp(${index})"
+                                >
+                                    Remover
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                `;
+
+            }
+        )
+        .join("");
+
+    window.tempAdminData =
+        list;
+
+}
+
+
+/*
+ * Adicionar Temp Admin
+ */
+
+async function addTempAdmin(
+    event
+) {
+
+    event.preventDefault();
+
+
+    const username =
+        document.getElementById(
+            "tempUsername"
+        ).value.trim();
+
+
+    const userId =
+        document.getElementById(
+            "tempUserId"
+        ).value.trim();
+
+
+    const durationMinutes =
+        Number(
+            document.getElementById(
+                "tempDuration"
+            ).value
+        );
 
 
     try {
@@ -904,12 +1526,17 @@ async function addTemp() {
             {
                 method: "POST",
 
-                body:
-                    JSON.stringify({
-                        username,
-                        durationMinutes:
-                            minutes
-                    })
+                body: JSON.stringify({
+
+                    username,
+
+                    ...(userId
+                        ? { userId }
+                        : {}),
+
+                    durationMinutes
+
+                })
             }
         );
 
@@ -919,19 +1546,22 @@ async function addTemp() {
         );
 
 
-        document
-            .getElementById(
-                "tempUsername"
-            )
-            .value = "";
+        event.target.reset();
 
 
-        await loadTemp();
+        document.getElementById(
+            "tempDuration"
+        ).value = 60;
 
-    } catch(error) {
+
+        await loadAllRoles();
+
+
+    } catch (error) {
 
         toast(
-            error.message
+            error.message,
+            true
         );
 
     }
@@ -939,34 +1569,52 @@ async function addTemp() {
 }
 
 
+/*
+ * Editar expiração
+ */
+
 async function editTemp(
-    username
+    index
 ) {
 
-    const minutes =
+    const item =
+        window.tempAdminData?.[index];
+
+
+    if (!item) {
+        return;
+    }
+
+
+    const username =
+        item.username ??
+        item.name ??
+        item.playerName;
+
+
+    const answer =
         prompt(
-            "Quantos minutos adicionar à expiração?",
-            "60"
+            `Nova duração em minutos para ${username}:`
         );
 
 
-    if (
-        minutes === null
-    )
+    if (answer === null) {
         return;
+    }
 
 
-    const value =
-        Number(minutes);
+    const minutes =
+        Number(answer);
 
 
     if (
-        !Number.isFinite(value) ||
-        value <= 0
+        !Number.isFinite(minutes) ||
+        minutes <= 0
     ) {
 
         toast(
-            "Número inválido."
+            "Número de minutos inválido.",
+            true
         );
 
         return;
@@ -981,12 +1629,14 @@ async function editTemp(
             {
                 method: "POST",
 
-                body:
-                    JSON.stringify({
-                        username,
-                        addMinutes:
-                            value
-                    })
+                body: JSON.stringify({
+
+                    username,
+
+                    addMinutes:
+                        minutes
+
+                })
             }
         );
 
@@ -996,12 +1646,14 @@ async function editTemp(
         );
 
 
-        await loadTemp();
+        await loadAllRoles();
 
-    } catch(error) {
+
+    } catch (error) {
 
         toast(
-            error.message
+            error.message,
+            true
         );
 
     }
@@ -1009,16 +1661,38 @@ async function editTemp(
 }
 
 
+/*
+ * Remover Temp Admin
+ */
+
 async function removeTemp(
-    username
+    index
 ) {
+
+    const item =
+        window.tempAdminData?.[index];
+
+
+    if (!item) {
+        return;
+    }
+
+
+    const username =
+        item.username ??
+        item.name ??
+        item.playerName;
+
 
     if (
         !confirm(
-            `Remover ${username}?`
+            `Remover ${username} dos Temp Admins?`
         )
-    )
+    ) {
+
         return;
+
+    }
 
 
     try {
@@ -1028,10 +1702,11 @@ async function removeTemp(
             {
                 method: "POST",
 
-                body:
-                    JSON.stringify({
-                        username
-                    })
+                body: JSON.stringify({
+
+                    username
+
+                })
             }
         );
 
@@ -1041,12 +1716,14 @@ async function removeTemp(
         );
 
 
-        await loadTemp();
+        await loadAllRoles();
 
-    } catch(error) {
+
+    } catch (error) {
 
         toast(
-            error.message
+            error.message,
+            true
         );
 
     }
@@ -1054,119 +1731,112 @@ async function removeTemp(
 }
 
 
-/* =====================================================
-   ADMINS
-===================================================== */
+/*
+ * ADMINS
+ */
 
-async function loadAdmins() {
+function renderAdmins(
+    list
+) {
 
-    const data =
-        await api(
-            "/api/manox/admins"
-        );
-
-
-    const list =
+    const table =
         document.getElementById(
-            "adminList"
+            "adminsTable"
         );
 
 
-    list.innerHTML = "";
+    if (!list.length) {
 
-
-    if (
-        !data.admins ||
-        !data.admins.length
-    ) {
-
-        list.innerHTML =
-            `<div class="empty">
-                Nenhum Admin permanente.
-            </div>`;
-
-        return;
-
-    }
-
-
-    data.admins.forEach(item => {
-
-        const username =
-            item.username;
-
-
-        const element =
-            document.createElement(
-                "div"
-            );
-
-
-        element.className =
-            "item";
-
-
-        element.innerHTML = `
-
-            <div class="info">
-
-                <div class="name">
-                    🛡️ ${escapeHTML(username)}
-                </div>
-
-                <div class="small">
-                    Adicionado:
-                    ${escapeHTML(
-                        date(item.added_at)
-                    )}
-                </div>
-
-            </div>
-
-            <div class="actions">
-
-                <button
-                    class="danger"
-                    onclick="removeAdmin('${escapeHTML(username)}')">
-
-                    🗑️ Remover
-
-                </button>
-
-            </div>
-
+        table.innerHTML = `
+            <tr>
+                <td colspan="3"
+                    style="color:#71717a;">
+                    Nenhum Admin permanente.
+                </td>
+            </tr>
         `;
 
+        return;
 
-        list.appendChild(
-            element
-        );
+    }
 
-    });
+
+    table.innerHTML =
+        list.map(
+            (item, index) => {
+
+                const username =
+                    item.username ??
+                    item.name ??
+                    item.playerName ??
+                    "—";
+
+
+                const userId =
+                    item.userId ??
+                    item.user_id ??
+                    "—";
+
+
+                return `
+                    <tr>
+
+                        <td>
+                            <span class="badge admin">
+                                🛡️ ${esc(username)}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${esc(userId)}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="button danger"
+                                onclick="removeAdmin(${index})"
+                            >
+                                Remover
+                            </button>
+
+                        </td>
+
+                    </tr>
+                `;
+
+            }
+        )
+        .join("");
+
+
+    window.adminData =
+        list;
 
 }
 
 
-async function addAdmin() {
+/*
+ * Adicionar Admin
+ */
+
+async function addAdmin(
+    event
+) {
+
+    event.preventDefault();
+
 
     const username =
-        document
-            .getElementById(
-                "adminUsername"
-            )
-            .value
-            .trim();
+        document.getElementById(
+            "adminUsername"
+        ).value.trim();
 
 
-    if (!username) {
-
-        toast(
-            "Digite o username."
-        );
-
-        return;
-
-    }
+    const userId =
+        document.getElementById(
+            "adminUserId"
+        ).value.trim();
 
 
     try {
@@ -1176,32 +1846,35 @@ async function addAdmin() {
             {
                 method: "POST",
 
-                body:
-                    JSON.stringify({
-                        username
-                    })
+                body: JSON.stringify({
+
+                    username,
+
+                    ...(userId
+                        ? { userId }
+                        : {})
+
+                })
             }
         );
 
 
         toast(
-            "Admin adicionado!"
+            "Admin permanente adicionado!"
         );
 
 
-        document
-            .getElementById(
-                "adminUsername"
-            )
-            .value = "";
+        event.target.reset();
 
 
-        await loadAdmins();
+        await loadAllRoles();
 
-    } catch(error) {
+
+    } catch (error) {
 
         toast(
-            error.message
+            error.message,
+            true
         );
 
     }
@@ -1209,16 +1882,38 @@ async function addAdmin() {
 }
 
 
+/*
+ * Remover Admin
+ */
+
 async function removeAdmin(
-    username
+    index
 ) {
+
+    const item =
+        window.adminData?.[index];
+
+
+    if (!item) {
+        return;
+    }
+
+
+    const username =
+        item.username ??
+        item.name ??
+        item.playerName;
+
 
     if (
         !confirm(
-            `Remover ${username}?`
+            `Remover ${username} dos Admins permanentes?`
         )
-    )
+    ) {
+
         return;
+
+    }
 
 
     try {
@@ -1228,10 +1923,11 @@ async function removeAdmin(
             {
                 method: "POST",
 
-                body:
-                    JSON.stringify({
-                        username
-                    })
+                body: JSON.stringify({
+
+                    username
+
+                })
             }
         );
 
@@ -1241,12 +1937,14 @@ async function removeAdmin(
         );
 
 
-        await loadAdmins();
+        await loadAllRoles();
 
-    } catch(error) {
+
+    } catch (error) {
 
         toast(
-            error.message
+            error.message,
+            true
         );
 
     }
@@ -1254,119 +1952,112 @@ async function removeAdmin(
 }
 
 
-/* =====================================================
-   OWNERS
-===================================================== */
+/*
+ * OWNERS
+ */
 
-async function loadOwners() {
+function renderOwners(
+    list
+) {
 
-    const data =
-        await api(
-            "/api/manox/owners"
-        );
-
-
-    const list =
+    const table =
         document.getElementById(
-            "ownerList"
+            "ownersTable"
         );
 
 
-    list.innerHTML = "";
+    if (!list.length) {
 
-
-    if (
-        !data.owners ||
-        !data.owners.length
-    ) {
-
-        list.innerHTML =
-            `<div class="empty">
-                Nenhum Owner.
-            </div>`;
-
-        return;
-
-    }
-
-
-    data.owners.forEach(item => {
-
-        const username =
-            item.username;
-
-
-        const element =
-            document.createElement(
-                "div"
-            );
-
-
-        element.className =
-            "item";
-
-
-        element.innerHTML = `
-
-            <div class="info">
-
-                <div class="name">
-                    👑 ${escapeHTML(username)}
-                </div>
-
-                <div class="small">
-                    Adicionado:
-                    ${escapeHTML(
-                        date(item.added_at)
-                    )}
-                </div>
-
-            </div>
-
-            <div class="actions">
-
-                <button
-                    class="danger"
-                    onclick="removeOwner('${escapeHTML(username)}')">
-
-                    🗑️ Remover
-
-                </button>
-
-            </div>
-
+        table.innerHTML = `
+            <tr>
+                <td colspan="3"
+                    style="color:#71717a;">
+                    Nenhum dono cadastrado.
+                </td>
+            </tr>
         `;
 
+        return;
 
-        list.appendChild(
-            element
-        );
+    }
 
-    });
+
+    table.innerHTML =
+        list.map(
+            (item, index) => {
+
+                const username =
+                    item.username ??
+                    item.name ??
+                    item.playerName ??
+                    "—";
+
+
+                const userId =
+                    item.userId ??
+                    item.user_id ??
+                    "—";
+
+
+                return `
+                    <tr>
+
+                        <td>
+                            <span class="badge owner">
+                                👑 ${esc(username)}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${esc(userId)}
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="button danger"
+                                onclick="removeOwner(${index})"
+                            >
+                                Remover
+                            </button>
+
+                        </td>
+
+                    </tr>
+                `;
+
+            }
+        )
+        .join("");
+
+
+    window.ownerData =
+        list;
 
 }
 
 
-async function addOwner() {
+/*
+ * Adicionar Owner
+ */
+
+async function addOwner(
+    event
+) {
+
+    event.preventDefault();
+
 
     const username =
-        document
-            .getElementById(
-                "ownerUsername"
-            )
-            .value
-            .trim();
+        document.getElementById(
+            "ownerUsername"
+        ).value.trim();
 
 
-    if (!username) {
-
-        toast(
-            "Digite o username."
-        );
-
-        return;
-
-    }
+    const userId =
+        document.getElementById(
+            "ownerUserId"
+        ).value.trim();
 
 
     try {
@@ -1376,32 +2067,35 @@ async function addOwner() {
             {
                 method: "POST",
 
-                body:
-                    JSON.stringify({
-                        username
-                    })
+                body: JSON.stringify({
+
+                    username,
+
+                    ...(userId
+                        ? { userId }
+                        : {})
+
+                })
             }
         );
 
 
         toast(
-            "Owner adicionado!"
+            "Dono adicionado!"
         );
 
 
-        document
-            .getElementById(
-                "ownerUsername"
-            )
-            .value = "";
+        event.target.reset();
 
 
-        await loadOwners();
+        await loadAllRoles();
 
-    } catch(error) {
+
+    } catch (error) {
 
         toast(
-            error.message
+            error.message,
+            true
         );
 
     }
@@ -1409,16 +2103,38 @@ async function addOwner() {
 }
 
 
+/*
+ * Remover Owner
+ */
+
 async function removeOwner(
-    username
+    index
 ) {
+
+    const item =
+        window.ownerData?.[index];
+
+
+    if (!item) {
+        return;
+    }
+
+
+    const username =
+        item.username ??
+        item.name ??
+        item.playerName;
+
 
     if (
         !confirm(
-            `Remover ${username} dos Owners?`
+            `Remover ${username} dos donos?`
         )
-    )
+    ) {
+
         return;
+
+    }
 
 
     try {
@@ -1428,332 +2144,52 @@ async function removeOwner(
             {
                 method: "POST",
 
-                body:
-                    JSON.stringify({
-                        username
-                    })
+                body: JSON.stringify({
+
+                    username
+
+                })
             }
         );
 
 
         toast(
-            "Owner removido!"
+            "Dono removido!"
         );
 
 
-        await loadOwners();
+        await loadAllRoles();
 
-    } catch(error) {
-
-        toast(
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   SYSTEM MESSAGES
-===================================================== */
-
-async function sendSystemMessage() {
-
-    const message =
-        document
-            .getElementById(
-                "systemMessage"
-            )
-            .value
-            .trim();
-
-
-    if (!message) {
-
-        toast(
-            "Digite uma mensagem."
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        await api(
-            "/api/manox/system-message",
-            {
-                method: "POST",
-
-                body:
-                    JSON.stringify({
-                        message
-                    })
-            }
-        );
-
-
-        toast(
-            "Mensagem enviada!"
-        );
-
-
-        document
-            .getElementById(
-                "systemMessage"
-            )
-            .value = "";
-
-
-        await loadMessages();
-
-    } catch(error) {
-
-        toast(
-            error.message
-        );
-
-    }
-
-}
-
-
-async function loadMessages() {
-
-    const data =
-        await api(
-            "/api/manox/system-messages"
-        );
-
-
-    const list =
-        document.getElementById(
-            "messageList"
-        );
-
-
-    list.innerHTML = "";
-
-
-    if (
-        !data.messages ||
-        !data.messages.length
-    ) {
-
-        list.innerHTML =
-            `<div class="empty">
-                Nenhuma mensagem.
-            </div>`;
-
-        return;
-
-    }
-
-
-    data.messages.forEach(item => {
-
-        const element =
-            document.createElement(
-                "div"
-            );
-
-
-        element.className =
-            "item";
-
-
-        element.innerHTML = `
-
-            <div class="info">
-
-                <div class="name">
-                    📢 ${escapeHTML(item.message)}
-                </div>
-
-                <div class="small">
-                    ${escapeHTML(
-                        date(item.created_at)
-                    )}
-                </div>
-
-            </div>
-
-        `;
-
-
-        list.appendChild(
-            element
-        );
-
-    });
-
-}
-
-
-/* =====================================================
-   CHAT
-===================================================== */
-
-async function clearGlobalChat() {
-
-    if (
-        !confirm(
-            "Tem certeza que deseja limpar o chat global?"
-        )
-    )
-        return;
-
-
-    try {
-
-        await api(
-            "/api/manox/chat/clear",
-            {
-                method: "POST"
-            }
-        );
-
-
-        toast(
-            "Chat global limpo!"
-        );
-
-    } catch(error) {
-
-        toast(
-            error.message
-        );
-
-    }
-
-}
-
-
-async function clearServerChat() {
-
-    const serverId =
-        document
-            .getElementById(
-                "serverId"
-            )
-            .value
-            .trim();
-
-
-    if (!serverId) {
-
-        toast(
-            "Digite o Server ID."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !confirm(
-            `Limpar o chat do servidor ${serverId}?`
-        )
-    )
-        return;
-
-
-    try {
-
-        await api(
-            "/api/manox/server-chat/clear",
-            {
-                method: "POST",
-
-                body:
-                    JSON.stringify({
-                        serverId
-                    })
-            }
-        );
-
-
-        toast(
-            "Chat do servidor limpo!"
-        );
-
-
-    } catch(error) {
-
-        toast(
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   CARREGAR
-===================================================== */
-
-async function loadAll() {
-
-    // Não existe Key
-    if (!KEY || !KEY.trim()) {
-        window.location.replace("/");
-        return;
-    }
-
-    statusElement.textContent =
-        "🟡 Verificando Key...";
-
-    try {
-
-        // Primeiro testa uma rota autenticada
-        await api(
-            "/api/manox/temp-admins"
-        );
-
-        // Key válida
-        statusElement.textContent =
-            "🟢 Administrador conectado";
-
-        // Agora carrega os dados
-        await Promise.all([
-            loadTemp(),
-            loadAdmins(),
-            loadOwners(),
-            loadMessages()
-        ]);
 
     } catch (error) {
 
-        console.error(
-            "Erro no painel:",
-            error
-        );
-
-        // Somente Key inválida volta para o início
-        if (
-            error.message === "INVALID_KEY" ||
-            error.message === "NO_KEY"
-        ) {
-            window.location.replace("/");
-            return;
-        }
-
-        // Outros erros NÃO devem expulsar o usuário
-        statusElement.textContent =
-            "🟠 Erro ao carregar dados";
-
         toast(
-            "Erro ao carregar o painel: " +
-            error.message
+            error.message,
+            true
         );
+
     }
+
 }
 
-loadAll();
+
+/*
+ * Sair
+ */
+
+function logout() {
+
+    window.location.href =
+        "/";
+
+}
+
+
+/*
+ * Inicialização
+ */
+
+loadAllRoles();
 
 </script>
 
