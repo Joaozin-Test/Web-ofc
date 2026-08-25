@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Manox Hub — Administração</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #08080d;
+    color: white;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.status {
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #15151d;
+    color: #aaa;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.tab {
+    border: 0;
+    background: #15151d;
+    color: #aaa;
+    padding: 12px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tab.active {
+    background: #5865f2;
+    color: white;
+}
+
+.panel {
+    display: none;
+}
+
+.panel.active {
+    display: block;
+}
+
+.card {
+    background: #111117;
+    border: 1px solid #23232d;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.form {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+
+    gap: 10px;
+}
+
+input,
+textarea {
+    width: 100%;
+    border: 1px solid #292933;
+    background: #181820;
+    color: white;
+    border-radius: 9px;
+    padding: 12px;
+    outline: none;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button {
+    border: 0;
+    border-radius: 9px;
+    padding: 11px 15px;
+    cursor: pointer;
+}
+
+.primary {
+    background: #5865f2;
+    color: white;
+}
+
+.danger {
+    background: #ed4245;
+    color: white;
+}
+
+.warning {
+    background: #faa61a;
+    color: black;
+}
+
+.secondary {
+    background: #252530;
+    color: white;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item {
+    background: #181820;
+    border: 1px solid #292933;
+    border-radius: 10px;
+    padding: 14px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.info {
+    min-width: 0;
+}
+
+.name {
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.small {
+    color: #888;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.empty {
+    padding: 30px;
+    text-align: center;
+    color: #777;
+}
+
+.message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: #181820;
+    border: 1px solid #30303a;
+
+    padding: 13px 18px;
+    border-radius: 10px;
+
+    display: none;
+    z-index: 1000;
+}
+
+@media(max-width:600px) {
+
+    .container {
+        padding: 12px;
+    }
+
+    .header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .actions {
+        width: 100%;
+    }
+
+    .actions button {
+        flex: 1;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="header">
+
+    <div class="logo">
+        ⚡ Manox Hub Admin
+    </div>
+
+    <div
+        id="status"
+        class="status"
+    >
+        Conectando...
+    </div>
+
+</header>
+
+
+<nav class="tabs">
+
+    <button
+        class="tab active"
+        data-tab="temp">
+        ⏱️ Temp Admins
+    </button>
+
+    <button
+        class="tab"
+        data-tab="admins">
+        🛡️ Admins
+    </button>
+
+    <button
+        class="tab"
+        data-tab="owners">
+        👑 Donos
+    </button>
+
+    <button
+        class="tab"
+        data-tab="messages">
+        💬 Mensagens
+    </button>
+
+    <button
+        class="tab"
+        data-tab="chat">
+        🧹 Chat
+    </button>
+
+</nav>
+
+
+<!-- =====================================================
+     TEMP ADMINS
+===================================================== -->
+
+<section
+    id="temp"
+    class="panel active">
+
+    <div class="card">
+
+        <h2>
+            ⏱️ Adicionar Temp Admin
+        </h2>
+
+        <div class="form">
+
+            <input
+                id="tempUsername"
+                placeholder="Username"
+            >
+
+            <input
+                id="tempMinutes"
+                type="number"
+                min="1"
+                value="60"
+                placeholder="Minutos"
+            >
+
+            <button
+                class="primary"
+                onclick="addTemp()">
+
+                Adicionar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Temp Admins Ativos
+        </h2>
+
+        <div
+            id="tempList"
+            class="list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ADMINS
+===================================================== -->
+
+<section
+    id="admins"
+    class="panel">
+
+    <div class="card">
+
+        <h2>
+            🛡️ Adicionar Admin Permanente
+        </h2>
+
+        <div class="form">
+
+            <input
+                id="adminUsername"
+                placeholder="Username"
+            >
+
+            <button
+                class="primary"
+                onclick="addAdmin()">
+
+                Adicionar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Admins Permanentes
+        </h2>
+
+        <div
+            id="adminList"
+            class="list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     OWNERS
+===================================================== -->
+
+<section
+    id="owners"
+    class="panel">
+
+    <div class="card">
+
+        <h2>
+            👑 Adicionar Dono
+        </h2>
+
+        <div class="form">
+
+            <input
+                id="ownerUsername"
+                placeholder="Username"
+            >
+
+            <button
+                class="primary"
+                onclick="addOwner()">
+
+                Adicionar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Donos
+        </h2>
+
+        <div
+            id="ownerList"
+            class="list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SYSTEM MESSAGES
+===================================================== -->
+
+<section
+    id="messages"
+    class="panel">
+
+    <div class="card">
+
+        <h2>
+            📢 Mensagem do Sistema
+        </h2>
+
+        <textarea
+            id="systemMessage"
+            maxlength="250"
+            placeholder="Digite a mensagem...">
+        </textarea>
+
+        <br><br>
+
+        <button
+            class="primary"
+            onclick="sendSystemMessage()">
+
+            Enviar mensagem
+
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Histórico
+        </h2>
+
+        <div
+            id="messageList"
+            class="list">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CHAT
+===================================================== -->
+
+<section
+    id="chat"
+    class="panel">
+
+    <div class="card">
+
+        <h2>
+            🧹 Limpar Chat Global
+        </h2>
+
+        <p class="small">
+            Isso remove as mensagens do chat global.
+        </p>
+
+        <br>
+
+        <button
+            class="danger"
+            onclick="clearGlobalChat()">
+
+            Limpar Chat Global
+
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            🧹 Limpar Chat de Servidor
+        </h2>
+
+        <div class="form">
+
+            <input
+                id="serverId"
+                placeholder="JobId / Server ID"
+            >
+
+            <button
+                class="danger"
+                onclick="clearServerChat()">
+
+                Limpar servidor
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<div
+    id="toast"
+    class="message">
+</div>
+
+
+<script>
+
+const API =
+    "https://admin-data.josealessandrosst.workers.dev";
+
+
+const params =
+    new URLSearchParams(
+        location.search
+    );
+
+
+const KEY =
+    params.get("Key");
+
+
+const statusElement =
+    document.getElementById(
+        "status"
+    );
+
+
+/* =====================================================
+   API
+===================================================== */
+
+async function api(
+    endpoint,
+    options = {}
+) {
+
+    if (!KEY) {
+
+        throw new Error(
+            "Key não informada."
+        );
+
+    }
+
+
+    const response =
+        await fetch(
+            API + endpoint,
+            {
+                ...options,
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "x-manox-key":
+                        KEY,
+
+                    ...(options.headers || {})
+                }
+            }
+        );
+
+
+    let data = {};
+
+    try {
+
+        data =
+            await response.json();
+
+    } catch {}
+
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            data.message ||
+            "Erro HTTP " +
+            response.status
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function toast(text) {
+
+    const element =
+        document.getElementById(
+            "toast"
+        );
+
+
+    element.textContent =
+        text;
+
+
+    element.style.display =
+        "block";
+
+
+    setTimeout(() => {
+
+        element.style.display =
+            "none";
+
+    }, 3000);
+
+}
+
+
+/* =====================================================
+   ESCAPE
+===================================================== */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+function date(value) {
+
+    if (!value)
+        return "—";
+
+
+    const d =
+        new Date(
+            Number(value)
+        );
+
+
+    if (
+        Number.isNaN(
+            d.getTime()
+        )
+    ) {
+
+        return String(value);
+
+    }
+
+
+    return d.toLocaleString(
+        "pt-BR"
+    );
+
+}
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+document
+    .querySelectorAll(".tab")
+    .forEach(tab => {
+
+        tab.onclick = () => {
+
+            document
+                .querySelectorAll(".tab")
+                .forEach(x =>
+                    x.classList.remove(
+                        "active"
+                    )
+                );
+
+
+            document
+                .querySelectorAll(".panel")
+                .forEach(x =>
+                    x.classList.remove(
+                        "active"
+                    )
+                );
+
+
+            tab.classList.add(
+                "active"
+            );
+
+
+            document
+                .getElementById(
+                    tab.dataset.tab
+                )
+                .classList.add(
+                    "active"
+                );
+
+        };
+
+    });
+
+
+/* =====================================================
+   TEMP
+===================================================== */
+
+async function loadTemp() {
+
+    const data =
+        await api(
+            "/api/manox/temp-admins"
+        );
+
+
+    const list =
+        document.getElementById(
+            "tempList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    if (
+        !data.admins ||
+        !data.admins.length
+    ) {
+
+        list.innerHTML =
+            `<div class="empty">
+                Nenhum Temp Admin ativo.
+            </div>`;
+
+        return;
+
+    }
+
+
+    data.admins.forEach(item => {
+
+        const username =
+            item.username;
+
+
+        const element =
+            document.createElement(
+                "div"
+            );
+
+
+        element.className =
+            "item";
+
+
+        element.innerHTML = `
+
+            <div class="info">
+
+                <div class="name">
+                    ⏱️ ${escapeHTML(username)}
+                </div>
+
+                <div class="small">
+                    Expira:
+                    ${escapeHTML(
+                        date(item.expires_at)
+                    )}
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="warning"
+                    onclick="editTemp('${escapeHTML(username)}')">
+
+                    ✏️ Editar
+
+                </button>
+
+                <button
+                    class="danger"
+                    onclick="removeTemp('${escapeHTML(username)}')">
+
+                    🗑️ Remover
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        list.appendChild(
+            element
+        );
+
+    });
+
+}
+
+
+async function addTemp() {
+
+    const username =
+        document
+            .getElementById(
+                "tempUsername"
+            )
+            .value
+            .trim();
+
+
+    const minutes =
+        Number(
+            document
+                .getElementById(
+                    "tempMinutes"
+                )
+                .value
+        );
+
+
+    if (!username) {
+
+        toast(
+            "Digite o username."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await api(
+            "/api/manox/temp-admins/add",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        username,
+                        durationMinutes:
+                            minutes
+                    })
+            }
+        );
+
+
+        toast(
+            "Temp Admin adicionado!"
+        );
+
+
+        document
+            .getElementById(
+                "tempUsername"
+            )
+            .value = "";
+
+
+        await loadTemp();
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+async function editTemp(
+    username
+) {
+
+    const minutes =
+        prompt(
+            "Quantos minutos adicionar à expiração?",
+            "60"
+        );
+
+
+    if (
+        minutes === null
+    )
+        return;
+
+
+    const value =
+        Number(minutes);
+
+
+    if (
+        !Number.isFinite(value) ||
+        value <= 0
+    ) {
+
+        toast(
+            "Número inválido."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await api(
+            "/api/manox/temp-admins/edit-expire",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        username,
+                        addMinutes:
+                            value
+                    })
+            }
+        );
+
+
+        toast(
+            "Expiração atualizada!"
+        );
+
+
+        await loadTemp();
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+async function removeTemp(
+    username
+) {
+
+    if (
+        !confirm(
+            `Remover ${username}?`
+        )
+    )
+        return;
+
+
+    try {
+
+        await api(
+            "/api/manox/temp-admins/remove",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        username
+                    })
+            }
+        );
+
+
+        toast(
+            "Temp Admin removido!"
+        );
+
+
+        await loadTemp();
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ADMINS
+===================================================== */
+
+async function loadAdmins() {
+
+    const data =
+        await api(
+            "/api/manox/admins"
+        );
+
+
+    const list =
+        document.getElementById(
+            "adminList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    if (
+        !data.admins ||
+        !data.admins.length
+    ) {
+
+        list.innerHTML =
+            `<div class="empty">
+                Nenhum Admin permanente.
+            </div>`;
+
+        return;
+
+    }
+
+
+    data.admins.forEach(item => {
+
+        const username =
+            item.username;
+
+
+        const element =
+            document.createElement(
+                "div"
+            );
+
+
+        element.className =
+            "item";
+
+
+        element.innerHTML = `
+
+            <div class="info">
+
+                <div class="name">
+                    🛡️ ${escapeHTML(username)}
+                </div>
+
+                <div class="small">
+                    Adicionado:
+                    ${escapeHTML(
+                        date(item.added_at)
+                    )}
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="danger"
+                    onclick="removeAdmin('${escapeHTML(username)}')">
+
+                    🗑️ Remover
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        list.appendChild(
+            element
+        );
+
+    });
+
+}
+
+
+async function addAdmin() {
+
+    const username =
+        document
+            .getElementById(
+                "adminUsername"
+            )
+            .value
+            .trim();
+
+
+    if (!username) {
+
+        toast(
+            "Digite o username."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await api(
+            "/api/manox/admins/add",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        username
+                    })
+            }
+        );
+
+
+        toast(
+            "Admin adicionado!"
+        );
+
+
+        document
+            .getElementById(
+                "adminUsername"
+            )
+            .value = "";
+
+
+        await loadAdmins();
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+async function removeAdmin(
+    username
+) {
+
+    if (
+        !confirm(
+            `Remover ${username}?`
+        )
+    )
+        return;
+
+
+    try {
+
+        await api(
+            "/api/manox/admins/remove",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        username
+                    })
+            }
+        );
+
+
+        toast(
+            "Admin removido!"
+        );
+
+
+        await loadAdmins();
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   OWNERS
+===================================================== */
+
+async function loadOwners() {
+
+    const data =
+        await api(
+            "/api/manox/owners"
+        );
+
+
+    const list =
+        document.getElementById(
+            "ownerList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    if (
+        !data.owners ||
+        !data.owners.length
+    ) {
+
+        list.innerHTML =
+            `<div class="empty">
+                Nenhum Owner.
+            </div>`;
+
+        return;
+
+    }
+
+
+    data.owners.forEach(item => {
+
+        const username =
+            item.username;
+
+
+        const element =
+            document.createElement(
+                "div"
+            );
+
+
+        element.className =
+            "item";
+
+
+        element.innerHTML = `
+
+            <div class="info">
+
+                <div class="name">
+                    👑 ${escapeHTML(username)}
+                </div>
+
+                <div class="small">
+                    Adicionado:
+                    ${escapeHTML(
+                        date(item.added_at)
+                    )}
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="danger"
+                    onclick="removeOwner('${escapeHTML(username)}')">
+
+                    🗑️ Remover
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        list.appendChild(
+            element
+        );
+
+    });
+
+}
+
+
+async function addOwner() {
+
+    const username =
+        document
+            .getElementById(
+                "ownerUsername"
+            )
+            .value
+            .trim();
+
+
+    if (!username) {
+
+        toast(
+            "Digite o username."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await api(
+            "/api/manox/owners/add",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        username
+                    })
+            }
+        );
+
+
+        toast(
+            "Owner adicionado!"
+        );
+
+
+        document
+            .getElementById(
+                "ownerUsername"
+            )
+            .value = "";
+
+
+        await loadOwners();
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+async function removeOwner(
+    username
+) {
+
+    if (
+        !confirm(
+            `Remover ${username} dos Owners?`
+        )
+    )
+        return;
+
+
+    try {
+
+        await api(
+            "/api/manox/owners/remove",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        username
+                    })
+            }
+        );
+
+
+        toast(
+            "Owner removido!"
+        );
+
+
+        await loadOwners();
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SYSTEM MESSAGES
+===================================================== */
+
+async function sendSystemMessage() {
+
+    const message =
+        document
+            .getElementById(
+                "systemMessage"
+            )
+            .value
+            .trim();
+
+
+    if (!message) {
+
+        toast(
+            "Digite uma mensagem."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await api(
+            "/api/manox/system-message",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        message
+                    })
+            }
+        );
+
+
+        toast(
+            "Mensagem enviada!"
+        );
+
+
+        document
+            .getElementById(
+                "systemMessage"
+            )
+            .value = "";
+
+
+        await loadMessages();
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+async function loadMessages() {
+
+    const data =
+        await api(
+            "/api/manox/system-messages"
+        );
+
+
+    const list =
+        document.getElementById(
+            "messageList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    if (
+        !data.messages ||
+        !data.messages.length
+    ) {
+
+        list.innerHTML =
+            `<div class="empty">
+                Nenhuma mensagem.
+            </div>`;
+
+        return;
+
+    }
+
+
+    data.messages.forEach(item => {
+
+        const element =
+            document.createElement(
+                "div"
+            );
+
+
+        element.className =
+            "item";
+
+
+        element.innerHTML = `
+
+            <div class="info">
+
+                <div class="name">
+                    📢 ${escapeHTML(item.message)}
+                </div>
+
+                <div class="small">
+                    ${escapeHTML(
+                        date(item.created_at)
+                    )}
+                </div>
+
+            </div>
+
+        `;
+
+
+        list.appendChild(
+            element
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   CHAT
+===================================================== */
+
+async function clearGlobalChat() {
+
+    if (
+        !confirm(
+            "Tem certeza que deseja limpar o chat global?"
+        )
+    )
+        return;
+
+
+    try {
+
+        await api(
+            "/api/manox/chat/clear",
+            {
+                method: "POST"
+            }
+        );
+
+
+        toast(
+            "Chat global limpo!"
+        );
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+async function clearServerChat() {
+
+    const serverId =
+        document
+            .getElementById(
+                "serverId"
+            )
+            .value
+            .trim();
+
+
+    if (!serverId) {
+
+        toast(
+            "Digite o Server ID."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !confirm(
+            `Limpar o chat do servidor ${serverId}?`
+        )
+    )
+        return;
+
+
+    try {
+
+        await api(
+            "/api/manox/server-chat/clear",
+            {
+                method: "POST",
+
+                body:
+                    JSON.stringify({
+                        serverId
+                    })
+            }
+        );
+
+
+        toast(
+            "Chat do servidor limpo!"
+        );
+
+
+    } catch(error) {
+
+        toast(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CARREGAR
+===================================================== */
+
+async function loadAll() {
+
+    // Sem Key → volta para o início
+    if (!KEY || !KEY.trim()) {
+        window.location.replace("/");
+        return;
+    }
+
+    try {
+
+        statusElement.textContent =
+            "🟡 Verificando...";
+
+        await Promise.all([
+            loadTemp(),
+            loadAdmins(),
+            loadOwners(),
+            loadMessages()
+        ]);
+
+        statusElement.textContent =
+            "🟢 Administrador conectado";
+
+    } catch (error) {
+
+        console.error(
+            "Erro de autenticação:",
+            error
+        );
+
+        // Key inválida / acesso negado
+        window.location.replace("/");
+
+    }
+}
+
+loadAll();
+
+</script>
+
+</body>
+</html>
