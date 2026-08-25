@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Manox Hub — Administração</title>
 
-    <meta
-        name="robots"
-        content="noindex, nofollow"
-    >
-
     <style>
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -21,169 +23,131 @@
         body {
             font-family:
                 Inter,
-                system-ui,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
+                Arial,
                 sans-serif;
 
-            background: #09090b;
+            background:
+                #080b12;
+
             color: #fff;
+
             min-height: 100vh;
         }
 
-        button,
-        input,
-        select {
-            font: inherit;
-        }
+        .topbar {
+            height: 70px;
 
-        .app {
-            min-height: 100vh;
             display: flex;
-        }
+            align-items: center;
+            justify-content: space-between;
 
-        /* SIDEBAR */
+            padding: 0 25px;
 
-        .sidebar {
-            width: 250px;
-            background: #111113;
-            border-right: 1px solid #242428;
-            padding: 20px;
-            position: fixed;
-            inset: 0 auto 0 0;
-            z-index: 20;
+            background:
+                #0d111a;
+
+            border-bottom:
+                1px solid #202736;
         }
 
         .logo {
             font-size: 22px;
             font-weight: 800;
-            margin-bottom: 30px;
         }
 
         .logo span {
-            color: #8b5cf6;
-        }
-
-        .nav {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .nav button {
-            width: 100%;
-            text-align: left;
-            border: 0;
-            background: transparent;
-            color: #a1a1aa;
-            padding: 13px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .nav button:hover,
-        .nav button.active {
-            background: #1d1d22;
-            color: white;
-        }
-
-        .logout {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-        }
-
-        .logout button {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #303038;
-            border-radius: 9px;
-            background: transparent;
-            color: #aaa;
-            cursor: pointer;
-        }
-
-        /* MAIN */
-
-        .main {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            padding: 30px;
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .topbar h1 {
-            font-size: 28px;
+            color: #6c63ff;
         }
 
         .status {
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #86efac;
-            font-size: 14px;
+
+            font-size: 13px;
+            color: #aeb7c7;
         }
 
         .status-dot {
             width: 9px;
             height: 9px;
+
             border-radius: 50%;
-            background: #22c55e;
+
+            background: #35d07f;
         }
 
-        /* CARDS */
+        .container {
+            width: min(1200px, 94%);
 
-        .stats {
-            display: grid;
-            grid-template-columns:
-                repeat(3, minmax(0, 1fr));
+            margin:
+                30px auto;
+        }
 
-            gap: 16px;
+        .page-title {
             margin-bottom: 25px;
         }
 
-        .stat {
-            background: #111113;
-            border: 1px solid #242428;
-            border-radius: 14px;
-            padding: 20px;
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
         }
 
-        .stat-title {
-            color: #a1a1aa;
+        .page-title p {
+            color: #8e98aa;
+        }
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background:
+                #10151f;
+
+            border:
+                1px solid #202736;
+
+            border-radius: 16px;
+
+            padding: 22px;
+        }
+
+        .card-icon {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            color: #8e98aa;
             font-size: 14px;
-            margin-bottom: 8px;
         }
 
-        .stat-value {
-            font-size: 28px;
+        .card-value {
+            font-size: 30px;
             font-weight: 800;
-        }
 
-        /* SECTIONS */
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
+            margin-top: 5px;
         }
 
         .panel {
-            background: #111113;
-            border: 1px solid #242428;
-            border-radius: 14px;
-            padding: 20px;
+            background:
+                #10151f;
+
+            border:
+                1px solid #202736;
+
+            border-radius: 16px;
+
+            padding: 22px;
+
             margin-bottom: 20px;
         }
 
@@ -191,786 +155,596 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            gap: 15px;
+
             margin-bottom: 18px;
         }
 
-        .panel-header h2 {
+        .panel-title {
             font-size: 19px;
+            font-weight: 700;
         }
 
-        /* TABLE */
+        .add-button {
+            border: none;
 
-        .table-wrap {
-            width: 100%;
-            overflow-x: auto;
+            background:
+                #6c63ff;
+
+            color: white;
+
+            padding:
+                10px 15px;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            font-weight: 700;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .add-button:hover {
+            opacity: .9;
         }
 
-        th,
-        td {
-            padding: 13px 10px;
-            text-align: left;
-            border-bottom: 1px solid #242428;
-            white-space: nowrap;
-        }
-
-        th {
-            color: #a1a1aa;
-            font-size: 13px;
-        }
-
-        td {
-            font-size: 14px;
-        }
-
-        /* FORM */
-
-        .form-grid {
-            display: grid;
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-
-            gap: 12px;
-        }
-
-        .field {
+        .list {
             display: flex;
             flex-direction: column;
-            gap: 7px;
+
+            gap: 10px;
         }
 
-        .field label {
-            color: #a1a1aa;
-            font-size: 13px;
+        .user {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 14px;
+
+            background:
+                #0c1018;
+
+            border:
+                1px solid #202736;
+
+            border-radius: 11px;
         }
 
-        input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 9px;
-            border: 1px solid #303038;
-            background: #09090b;
-            color: white;
-            outline: none;
+        .user-info {
+            min-width: 0;
         }
 
-        input:focus {
-            border-color: #8b5cf6;
+        .username {
+            font-weight: 700;
         }
 
-        .button {
-            border: 0;
-            border-radius: 9px;
-            padding: 11px 16px;
-            background: #7c3aed;
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-        }
+        .details {
+            color: #8791a3;
 
-        .button:hover {
-            background: #8b5cf6;
-        }
+            font-size: 12px;
 
-        .button.danger {
-            background: #dc2626;
-        }
-
-        .button.secondary {
-            background: #27272a;
+            margin-top: 4px;
         }
 
         .actions {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
-        /* BADGES */
-
-        .badge {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 999px;
-            font-size: 12px;
-            background: #27272a;
-            color: #d4d4d8;
+        button {
+            font-family: inherit;
         }
 
-        .badge.owner {
-            background: #422006;
-            color: #fbbf24;
+        .danger {
+            border: none;
+
+            background:
+                #dc4657;
+
+            color: white;
+
+            padding:
+                8px 12px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
         }
 
-        .badge.admin {
-            background: #312e81;
-            color: #a5b4fc;
+        .edit {
+            border: none;
+
+            background:
+                #263149;
+
+            color: white;
+
+            padding:
+                8px 12px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
         }
 
-        .badge.temp {
-            background: #064e3b;
-            color: #6ee7b7;
+        .empty {
+            text-align: center;
+
+            color: #727c8e;
+
+            padding: 25px;
         }
 
-        /* TOAST */
+        .modal {
+            position: fixed;
+
+            inset: 0;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                rgba(0, 0, 0, .7);
+
+            z-index: 999;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            width: min(440px, 100%);
+
+            background:
+                #111722;
+
+            border:
+                1px solid #283143;
+
+            border-radius: 16px;
+
+            padding: 23px;
+        }
+
+        .modal-box h2 {
+            margin-bottom: 18px;
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .field label {
+            display: block;
+
+            font-size: 13px;
+
+            color: #929daf;
+
+            margin-bottom: 7px;
+        }
+
+        .field input {
+            width: 100%;
+
+            padding: 12px;
+
+            background:
+                #090d14;
+
+            border:
+                1px solid #293143;
+
+            border-radius: 9px;
+
+            color: white;
+
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color:
+                #6c63ff;
+        }
+
+        .modal-actions {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 18px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+
+            padding: 11px;
+
+            border-radius: 9px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-weight: 700;
+        }
+
+        .confirm {
+            background:
+                #6c63ff;
+
+            color: white;
+        }
+
+        .cancel {
+            background:
+                #252d3c;
+
+            color: white;
+        }
 
         .toast {
             position: fixed;
+
             right: 20px;
             bottom: 20px;
-            padding: 13px 17px;
-            background: #18181b;
-            border: 1px solid #303038;
+
+            padding:
+                13px 17px;
+
+            background:
+                #151c28;
+
+            border:
+                1px solid #2a3447;
+
             border-radius: 10px;
+
             display: none;
-            z-index: 100;
-            max-width: 350px;
+
+            z-index: 2000;
         }
 
         .toast.show {
             display: block;
         }
 
-        .toast.error {
-            border-color: #7f1d1d;
-        }
-
-        /* LOADING */
-
         .loading {
-            opacity: .55;
-            pointer-events: none;
-        }
+            text-align: center;
 
-        /* MOBILE */
+            padding: 25px;
 
-        .mobile-header {
-            display: none;
+            color: #8791a3;
         }
 
         @media (max-width: 800px) {
 
-            .sidebar {
-                display: none;
-            }
-
-            .main {
-                margin-left: 0;
-                width: 100%;
-                padding: 20px;
-                padding-top: 75px;
-            }
-
-            .mobile-header {
-                display: flex;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 60px;
-                background: #111113;
-                border-bottom: 1px solid #242428;
-                z-index: 30;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0 18px;
-            }
-
-            .mobile-header button {
-                border: 0;
-                background: transparent;
-                color: white;
-                font-size: 24px;
-            }
-
-            .mobile-menu {
-                display: none;
-                position: fixed;
-                top: 60px;
-                left: 0;
-                right: 0;
-                background: #111113;
-                padding: 12px;
-                z-index: 29;
-                border-bottom: 1px solid #242428;
-            }
-
-            .mobile-menu.show {
-                display: block;
-            }
-
-            .mobile-menu button {
-                width: 100%;
-                padding: 13px;
-                text-align: left;
-                border: 0;
-                background: transparent;
-                color: #bbb;
-            }
-
-            .stats {
+            .cards {
                 grid-template-columns: 1fr;
             }
 
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .topbar {
+            .panel-header {
                 align-items: flex-start;
-                gap: 10px;
+
                 flex-direction: column;
             }
+
+            .user {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+            .actions button {
+                flex: 1;
+            }
+
         }
+
     </style>
+
 </head>
 
 <body>
 
-<div class="mobile-header">
-    <strong>Manox <span>Admin</span></strong>
+<header class="topbar">
 
-    <button onclick="toggleMobileMenu()">
-        ☰
-    </button>
-</div>
+    <div class="logo">
+        Manox <span>Hub</span>
+    </div>
 
-<div
-    id="mobileMenu"
-    class="mobile-menu"
->
-    <button onclick="showSection('dashboard')">
-        📊 Dashboard
-    </button>
+    <div class="status">
+        <span class="status-dot"></span>
+        Administração
+    </div>
 
-    <button onclick="showSection('temp')">
-        ⏱️ Temp Admins
-    </button>
-
-    <button onclick="showSection('admins')">
-        🛡️ Admins Permanentes
-    </button>
-
-    <button onclick="showSection('owners')">
-        👑 Donos
-    </button>
-</div>
+</header>
 
 
-<div class="app">
+<main class="container">
 
-    <!-- SIDEBAR -->
+    <div class="page-title">
 
-    <aside class="sidebar">
+        <h1>
+            Painel de Administração
+        </h1>
 
-        <div class="logo">
-            Manox <span>Admin</span>
+        <p>
+            Gerencie os cargos e permissões do Manox Hub.
+        </p>
+
+    </div>
+
+
+    <section class="cards">
+
+        <div class="card">
+
+            <div class="card-icon">
+                👑
+            </div>
+
+            <div class="card-title">
+                Donos
+            </div>
+
+            <div
+                class="card-value"
+                id="ownersCount"
+            >
+                0
+            </div>
+
         </div>
 
-        <div class="nav">
 
-            <button
-                class="active"
-                data-section="dashboard"
-                onclick="showSection('dashboard')"
-            >
-                📊 Dashboard
-            </button>
+        <div class="card">
 
-            <button
-                data-section="temp"
-                onclick="showSection('temp')"
-            >
-                ⏱️ Temp Admins
-            </button>
+            <div class="card-icon">
+                🛡️
+            </div>
 
-            <button
-                data-section="admins"
-                onclick="showSection('admins')"
-            >
-                🛡️ Admins Permanentes
-            </button>
+            <div class="card-title">
+                Admins Permanentes
+            </div>
 
-            <button
-                data-section="owners"
-                onclick="showSection('owners')"
+            <div
+                class="card-value"
+                id="adminsCount"
             >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-icon">
+                ⏱️
+            </div>
+
+            <div class="card-title">
+                Admins Temporários
+            </div>
+
+            <div
+                class="card-value"
+                id="tempAdminsCount"
+            >
+                0
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- OWNERS -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div class="panel-title">
                 👑 Donos
+            </div>
+
+            <button
+                class="add-button"
+                onclick="openAdd('owner')"
+            >
+                + Adicionar Dono
             </button>
 
         </div>
 
-        <div class="logout">
-            <button onclick="logout()">
-                Sair
+        <div
+            id="ownersList"
+            class="list"
+        >
+            <div class="loading">
+                Carregando...
+            </div>
+        </div>
+
+    </section>
+
+
+
+    <!-- PERMANENT ADMINS -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div class="panel-title">
+                🛡️ Admins Permanentes
+            </div>
+
+            <button
+                class="add-button"
+                onclick="openAdd('admin')"
+            >
+                + Adicionar Admin
             </button>
-        </div>
-
-    </aside>
-
-
-    <!-- MAIN -->
-
-    <main class="main">
-
-        <div class="topbar">
-
-            <div>
-                <h1 id="pageTitle">
-                    Dashboard
-                </h1>
-
-                <p style="color:#71717a;margin-top:5px;">
-                    Gerenciamento do Manox Hub
-                </p>
-            </div>
-
-            <div class="status">
-                <span class="status-dot"></span>
-                API conectada
-            </div>
 
         </div>
 
+        <div
+            id="adminsList"
+            class="list"
+        >
+            <div class="loading">
+                Carregando...
+            </div>
+        </div>
 
-        <!-- DASHBOARD -->
+    </section>
 
-        <section
-            id="section-dashboard"
-            class="section active"
+
+
+    <!-- TEMP ADMINS -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div class="panel-title">
+                ⏱️ Admins Temporários
+            </div>
+
+            <button
+                class="add-button"
+                onclick="openAdd('temp')"
+            >
+                + Adicionar Temp Admin
+            </button>
+
+        </div>
+
+        <div
+            id="tempAdminsList"
+            class="list"
+        >
+            <div class="loading">
+                Carregando...
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- MODAL -->
+
+<div
+    class="modal"
+    id="modal"
+>
+
+    <div class="modal-box">
+
+        <h2 id="modalTitle">
+            Adicionar
+        </h2>
+
+        <div class="field">
+
+            <label>
+                Username / UserId
+            </label>
+
+            <input
+                id="usernameInput"
+                placeholder="Ex: Jose123"
+            >
+
+        </div>
+
+
+        <div
+            class="field"
+            id="durationField"
         >
 
-            <div class="stats">
+            <label>
+                Duração em minutos
+            </label>
 
-                <div class="stat">
+            <input
+                id="durationInput"
+                type="number"
+                min="1"
+                placeholder="60"
+            >
 
-                    <div class="stat-title">
-                        Donos
-                    </div>
-
-                    <div
-                        id="ownersCount"
-                        class="stat-value"
-                    >
-                        —
-                    </div>
-
-                </div>
+        </div>
 
 
-                <div class="stat">
-
-                    <div class="stat-title">
-                        Admins Permanentes
-                    </div>
-
-                    <div
-                        id="adminsCount"
-                        class="stat-value"
-                    >
-                        —
-                    </div>
-
-                </div>
-
-
-                <div class="stat">
-
-                    <div class="stat-title">
-                        Temp Admins Ativos
-                    </div>
-
-                    <div
-                        id="tempCount"
-                        class="stat-value"
-                    >
-                        —
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Status das permissões
-                    </h2>
-
-                    <button
-                        class="button secondary"
-                        onclick="loadAllRoles()"
-                    >
-                        Atualizar
-                    </button>
-
-                </div>
-
-                <p
-                    id="dashboardStatus"
-                    style="color:#a1a1aa;"
-                >
-                    Carregando...
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- TEMP ADMINS -->
-
-        <section
-            id="section-temp"
-            class="section"
+        <div
+            class="field"
+            id="expireField"
+            style="display:none"
         >
 
-            <div class="panel">
+            <label>
+                Nova expiração (timestamp)
+            </label>
 
-                <div class="panel-header">
+            <input
+                id="expireInput"
+                type="number"
+                placeholder="Timestamp em ms"
+            >
 
-                    <h2>
-                        Adicionar Temp Admin
-                    </h2>
+        </div>
 
-                </div>
 
-                <form
-                    onsubmit="addTempAdmin(event)"
-                >
+        <div class="modal-actions">
 
-                    <div class="form-grid">
+            <button
+                class="cancel"
+                onclick="closeModal()"
+            >
+                Cancelar
+            </button>
 
-                        <div class="field">
+            <button
+                class="confirm"
+                onclick="submitModal()"
+            >
+                Confirmar
+            </button>
 
-                            <label>
-                                Username
-                            </label>
+        </div>
 
-                            <input
-                                id="tempUsername"
-                                placeholder="Player123"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                User ID
-                            </label>
-
-                            <input
-                                id="tempUserId"
-                                placeholder="Opcional"
-                            >
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Duração em minutos
-                            </label>
-
-                            <input
-                                id="tempDuration"
-                                type="number"
-                                min="1"
-                                value="60"
-                                required
-                            >
-
-                        </div>
-
-                    </div>
-
-                    <br>
-
-                    <button class="button">
-                        Adicionar Temp Admin
-                    </button>
-
-                </form>
-
-            </div>
-
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Temp Admins
-                    </h2>
-
-                    <button
-                        class="button secondary"
-                        onclick="loadAllRoles()"
-                    >
-                        Atualizar
-                    </button>
-
-                </div>
-
-                <div class="table-wrap">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Usuário</th>
-                                <th>ID</th>
-                                <th>Expira em</th>
-                                <th>Ações</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody id="tempTable">
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ADMINS -->
-
-        <section
-            id="section-admins"
-            class="section"
-        >
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Adicionar Admin Permanente
-                    </h2>
-
-                </div>
-
-                <form
-                    onsubmit="addAdmin(event)"
-                >
-
-                    <div class="form-grid">
-
-                        <div class="field">
-
-                            <label>
-                                Username
-                            </label>
-
-                            <input
-                                id="adminUsername"
-                                placeholder="Player123"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                User ID
-                            </label>
-
-                            <input
-                                id="adminUserId"
-                                placeholder="Opcional"
-                            >
-
-                        </div>
-
-                    </div>
-
-                    <br>
-
-                    <button class="button">
-                        Adicionar Admin
-                    </button>
-
-                </form>
-
-            </div>
-
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Admins Permanentes
-                    </h2>
-
-                    <button
-                        class="button secondary"
-                        onclick="loadAllRoles()"
-                    >
-                        Atualizar
-                    </button>
-
-                </div>
-
-                <div class="table-wrap">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Usuário</th>
-                                <th>ID</th>
-                                <th>Ações</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody id="adminsTable">
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- OWNERS -->
-
-        <section
-            id="section-owners"
-            class="section"
-        >
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Adicionar Dono
-                    </h2>
-
-                </div>
-
-                <form
-                    onsubmit="addOwner(event)"
-                >
-
-                    <div class="form-grid">
-
-                        <div class="field">
-
-                            <label>
-                                Username
-                            </label>
-
-                            <input
-                                id="ownerUsername"
-                                placeholder="Player123"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                User ID
-                            </label>
-
-                            <input
-                                id="ownerUserId"
-                                placeholder="Opcional"
-                            >
-
-                        </div>
-
-                    </div>
-
-                    <br>
-
-                    <button class="button">
-                        Adicionar Dono
-                    </button>
-
-                </form>
-
-            </div>
-
-
-            <div class="panel">
-
-                <div class="panel-header">
-
-                    <h2>
-                        Donos
-                    </h2>
-
-                    <button
-                        class="button secondary"
-                        onclick="loadAllRoles()"
-                    >
-                        Atualizar
-                    </button>
-
-                </div>
-
-                <div class="table-wrap">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-                                <th>Usuário</th>
-                                <th>ID</th>
-                                <th>Ações</th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody id="ownersTable">
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
+    </div>
 
 </div>
 
 
 <div
-    id="toast"
     class="toast"
+    id="toast"
 ></div>
+
 
 
 <script>
@@ -978,8 +752,11 @@
 const API =
     "https://admin-data.josealessandrosst.workers.dev";
 
+
 /*
- * Pegar Key da URL
+ * ============================================================
+ * AUTENTICAÇÃO
+ * ============================================================
  */
 
 const params =
@@ -987,16 +764,11 @@ const params =
         window.location.search
     );
 
-const ADMIN_KEY =
+const KEY =
     params.get("Key");
 
 
-/*
- * Não permitir abrir o painel
- * sem Key.
- */
-
-if (!ADMIN_KEY) {
+if (!KEY) {
 
     document.body.innerHTML = `
         <div style="
@@ -1004,34 +776,58 @@ if (!ADMIN_KEY) {
             display:flex;
             align-items:center;
             justify-content:center;
-            background:#09090b;
-            color:white;
-            font-family:system-ui;
-            text-align:center;
             padding:20px;
+            background:#080b12;
+            color:white;
+            font-family:Arial;
+            text-align:center;
         ">
+
             <div>
-                <h1>🔒 Acesso negado</h1>
+
+                <h1>
+                    🔒 Acesso negado
+                </h1>
 
                 <p style="
-                    color:#a1a1aa;
+                    color:#929daf;
                     margin-top:10px;
                 ">
-                    Informe uma Key de administração.
+                    Chave administrativa não informada.
                 </p>
+
             </div>
+
         </div>
     `;
 
     throw new Error(
-        "ADMIN_KEY não encontrada."
+        "ADMIN KEY não informada"
     );
 
 }
 
 
 /*
- * Request autenticado
+ * A Key é enviada somente para a API.
+ */
+
+const requestHeaders = {
+
+    "Content-Type":
+        "application/json",
+
+    "x-manox-key":
+        KEY
+
+};
+
+
+
+/*
+ * ============================================================
+ * API
+ * ============================================================
  */
 
 async function api(
@@ -1039,23 +835,16 @@ async function api(
     options = {}
 ) {
 
-    const headers = {
-        "Content-Type":
-            "application/json",
-
-        "x-manox-key":
-            ADMIN_KEY,
-
-        ...(options.headers || {})
-    };
-
-
     const response =
         await fetch(
             API + endpoint,
             {
                 ...options,
-                headers
+
+                headers: {
+                    ...requestHeaders,
+                    ...(options.headers || {})
+                }
             }
         );
 
@@ -1079,19 +868,7 @@ async function api(
         throw new Error(
             data.message ||
             data.error ||
-            `HTTP ${response.status}`
-        );
-
-    }
-
-
-    if (
-        data.success === false
-    ) {
-
-        throw new Error(
-            data.message ||
-            "Operação recusada."
+            `Erro HTTP ${response.status}`
         );
 
     }
@@ -1102,76 +879,110 @@ async function api(
 }
 
 
+
 /*
- * Toast
+ * ============================================================
+ * UTILIDADES
+ * ============================================================
  */
 
-function toast(
-    message,
-    error = false
-) {
+function showToast(message) {
 
-    const el =
+    const toast =
         document.getElementById(
             "toast"
         );
 
-    el.textContent = message;
+    toast.textContent =
+        message;
 
-    el.className =
-        "toast show" +
-        (error ? " error" : "");
+    toast.classList.add(
+        "show"
+    );
 
     setTimeout(() => {
 
-        el.className = "toast";
+        toast.classList.remove(
+            "show"
+        );
 
-    }, 3500);
-
-}
-
-
-/*
- * Escape HTML
- */
-
-function esc(value) {
-
-    return String(
-        value ?? ""
-    )
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    }, 3000);
 
 }
 
 
-/*
- * Formatar data
- */
+function escapeHTML(value) {
 
-function formatDate(
-    value
-) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+function getName(item) {
+
+    if (
+        typeof item ===
+        "string"
+    ) {
+        return item;
+    }
+
+    return (
+        item.username ??
+        item.name ??
+        item.userId ??
+        item.user_id ??
+        item.id ??
+        "Desconhecido"
+    );
+
+}
+
+
+function getExpires(item) {
+
+    return (
+        item.expiresAt ??
+        item.expires_at ??
+        item.expireAt ??
+        item.expire_at ??
+        null
+    );
+
+}
+
+
+function formatExpire(value) {
 
     if (!value) {
-        return "—";
+        return "Sem expiração";
+    }
+
+    const number =
+        Number(value);
+
+    if (
+        Number.isNaN(number)
+    ) {
+        return String(value);
     }
 
     const date =
-        new Date(value);
+        new Date(
+            number
+        );
 
     if (
         Number.isNaN(
             date.getTime()
         )
     ) {
-
-        return esc(value);
-
+        return String(value);
     }
 
     return date.toLocaleString(
@@ -1181,119 +992,14 @@ function formatDate(
 }
 
 
-/*
- * Dashboard / navegação
- */
-
-function showSection(
-    name
-) {
-
-    document
-        .querySelectorAll(
-            ".section"
-        )
-        .forEach(section => {
-
-            section.classList.remove(
-                "active"
-            );
-
-        });
-
-
-    const target =
-        document.getElementById(
-            "section-" + name
-        );
-
-    if (target) {
-
-        target.classList.add(
-            "active"
-        );
-
-    }
-
-
-    document
-        .querySelectorAll(
-            ".nav button"
-        )
-        .forEach(button => {
-
-            button.classList.toggle(
-                "active",
-                button.dataset.section === name
-            );
-
-        });
-
-
-    const titles = {
-
-        dashboard:
-            "Dashboard",
-
-        temp:
-            "Temp Admins",
-
-        admins:
-            "Admins Permanentes",
-
-        owners:
-            "Donos"
-
-    };
-
-
-    document.getElementById(
-        "pageTitle"
-    ).textContent =
-        titles[name] || "Admin";
-
-
-    document
-        .getElementById(
-            "mobileMenu"
-        )
-        .classList.remove(
-            "show"
-        );
-
-
-    if (
-        name === "dashboard" ||
-        name === "temp" ||
-        name === "admins" ||
-        name === "owners"
-    ) {
-
-        loadAllRoles();
-
-    }
-
-}
-
-
-function toggleMobileMenu() {
-
-    document
-        .getElementById(
-            "mobileMenu"
-        )
-        .classList.toggle(
-            "show"
-        );
-
-}
-
 
 /*
- * CARREGAR TODOS OS ROLES
+ * ============================================================
+ * CARREGAR TUDO
+ * ============================================================
  */
 
-async function loadAllRoles() {
+async function loadAll() {
 
     try {
 
@@ -1304,27 +1010,42 @@ async function loadAllRoles() {
 
 
         const owners =
-            Array.isArray(
-                data.owners
-            )
-                ? data.owners
-                : [];
+            data.owners ||
+            data.owner ||
+            [];
 
 
         const admins =
-            Array.isArray(
-                data.admins
-            )
-                ? data.admins
-                : [];
+            data.admins ||
+            data.permanentAdmins ||
+            [];
 
 
         const tempAdmins =
-            Array.isArray(
-                data.tempAdmins
-            )
-                ? data.tempAdmins
-                : [];
+            data.tempAdmins ||
+            data.temp_admins ||
+            [];
+
+
+        renderList(
+            "ownersList",
+            owners,
+            "owner"
+        );
+
+
+        renderList(
+            "adminsList",
+            admins,
+            "admin"
+        );
+
+
+        renderList(
+            "tempAdminsList",
+            tempAdmins,
+            "temp"
+        );
 
 
         document.getElementById(
@@ -1340,42 +1061,20 @@ async function loadAllRoles() {
 
 
         document.getElementById(
-            "tempCount"
+            "tempAdminsCount"
         ).textContent =
             tempAdmins.length;
 
 
-        renderOwners(
-            owners
-        );
-
-        renderAdmins(
-            admins
-        );
-
-        renderTempAdmins(
-            tempAdmins
-        );
-
-
-        document.getElementById(
-            "dashboardStatus"
-        ).textContent =
-            "Dados atualizados com sucesso.";
-
-
     } catch (error) {
 
-        document.getElementById(
-            "dashboardStatus"
-        ).textContent =
+        showToast(
             "Erro: " +
-            error.message;
+            error.message
+        );
 
-
-        toast(
-            error.message,
-            true
+        console.error(
+            error
         );
 
     }
@@ -1383,29 +1082,34 @@ async function loadAllRoles() {
 }
 
 
+
 /*
- * TEMP ADMINS
+ * ============================================================
+ * RENDER
+ * ============================================================
  */
 
-function renderTempAdmins(
-    list
+function renderList(
+    elementId,
+    list,
+    type
 ) {
 
-    const table =
+    const element =
         document.getElementById(
-            "tempTable"
+            elementId
         );
 
 
-    if (!list.length) {
+    if (
+        !Array.isArray(list) ||
+        list.length === 0
+    ) {
 
-        table.innerHTML = `
-            <tr>
-                <td colspan="4"
-                    style="color:#71717a;">
-                    Nenhum Temp Admin ativo.
-                </td>
-            </tr>
+        element.innerHTML = `
+            <div class="empty">
+                Nenhum usuário encontrado.
+            </div>
         `;
 
         return;
@@ -1413,155 +1117,382 @@ function renderTempAdmins(
     }
 
 
-    table.innerHTML =
-        list.map(
-            (item, index) => {
+    element.innerHTML =
+        list.map(item => {
 
-                const username =
-                    item.username ??
-                    item.name ??
-                    item.playerName ??
-                    "—";
+            const name =
+                getName(item);
 
-
-                const userId =
-                    item.userId ??
-                    item.user_id ??
-                    "—";
+            const expires =
+                getExpires(item);
 
 
-                const expiresAt =
-                    item.expiresAt ??
-                    item.expires_at ??
-                    item.expireAt;
+            let details = "";
 
 
-                return `
-                    <tr>
+            if (
+                type === "temp"
+            ) {
 
-                        <td>
-                            <span class="badge temp">
-                                ⏱️ ${esc(username)}
-                            </span>
-                        </td>
+                details =
+                    expires
+                        ? "Expira em: " +
+                          formatExpire(
+                              expires
+                          )
+                        : "Expiração não informada";
 
-                        <td>
-                            ${esc(userId)}
-                        </td>
+            } else {
 
-                        <td>
-                            ${formatDate(expiresAt)}
-                        </td>
+                details =
+                    "Permissão administrativa";
 
-                        <td>
+            }
 
-                            <div class="actions">
 
+            return `
+
+                <div class="user">
+
+                    <div class="user-info">
+
+                        <div class="username">
+                            ${escapeHTML(name)}
+                        </div>
+
+                        <div class="details">
+                            ${escapeHTML(details)}
+                        </div>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        ${
+                            type === "temp"
+                            ? `
                                 <button
-                                    class="button secondary"
-                                    onclick="editTemp(${index})"
+                                    class="edit"
+                                    onclick='editTemp(${JSON.stringify(item)})'
                                 >
-                                    Editar
+                                    Editar expiração
                                 </button>
+                            `
+                            : ""
+                        }
 
-                                <button
-                                    class="button danger"
-                                    onclick="removeTemp(${index})"
-                                >
-                                    Remover
-                                </button>
 
-                            </div>
+                        <button
+                            class="danger"
+                            onclick='removeRole(${JSON.stringify(item)}, "${type}")'
+                        >
+                            Remover
+                        </button>
 
-                        </td>
+                    </div>
 
-                    </tr>
-                `;
+                </div>
 
-            }
-        )
-        .join("");
+            `;
 
-    window.tempAdminData =
-        list;
+        }).join("");
 
 }
 
 
+
 /*
- * Adicionar Temp Admin
+ * ============================================================
+ * MODAL
+ * ============================================================
  */
 
-async function addTempAdmin(
-    event
-) {
+let modalType =
+    null;
 
-    event.preventDefault();
+let editingItem =
+    null;
 
+
+function openAdd(type) {
+
+    modalType =
+        type;
+
+    editingItem =
+        null;
+
+
+    document.getElementById(
+        "usernameInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "durationInput"
+    ).value = "60";
+
+
+    document.getElementById(
+        "expireInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "expireField"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "durationField"
+    ).style.display =
+        type === "temp"
+            ? "block"
+            : "none";
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        type === "owner"
+            ? "Adicionar Dono"
+            : type === "admin"
+                ? "Adicionar Admin Permanente"
+                : "Adicionar Temp Admin";
+
+
+    document.getElementById(
+        "modal"
+    ).classList.add(
+        "active"
+    );
+
+}
+
+
+function closeModal() {
+
+    document.getElementById(
+        "modal"
+    ).classList.remove(
+        "active"
+    );
+
+}
+
+
+function editTemp(item) {
+
+    modalType =
+        "edit-temp";
+
+    editingItem =
+        item;
+
+
+    document.getElementById(
+        "usernameInput"
+    ).value =
+        getName(item);
+
+
+    document.getElementById(
+        "durationField"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "expireField"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "expireInput"
+    ).value =
+        getExpires(item) || "";
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Editar expiração";
+
+
+    document.getElementById(
+        "modal"
+    ).classList.add(
+        "active"
+    );
+
+}
+
+
+
+/*
+ * ============================================================
+ * SUBMIT
+ * ============================================================
+ */
+
+async function submitModal() {
 
     const username =
         document.getElementById(
-            "tempUsername"
+            "usernameInput"
         ).value.trim();
 
 
-    const userId =
-        document.getElementById(
-            "tempUserId"
-        ).value.trim();
+    if (!username) {
 
-
-    const durationMinutes =
-        Number(
-            document.getElementById(
-                "tempDuration"
-            ).value
+        showToast(
+            "Informe o usuário."
         );
+
+        return;
+
+    }
 
 
     try {
 
-        await api(
-            "/api/manox/temp-admins/add",
-            {
-                method: "POST",
+        if (
+            modalType ===
+            "owner"
+        ) {
 
-                body: JSON.stringify({
+            await api(
+                "/api/manox/owners/add",
+                {
+                    method: "POST",
 
-                    username,
+                    body:
+                        JSON.stringify({
+                            username
+                        })
+                }
+            );
 
-                    ...(userId
-                        ? { userId }
-                        : {}),
+        }
 
-                    durationMinutes
 
-                })
+        else if (
+            modalType ===
+            "admin"
+        ) {
+
+            await api(
+                "/api/manox/admins/add",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            username
+                        })
+                }
+            );
+
+        }
+
+
+        else if (
+            modalType ===
+            "temp"
+        ) {
+
+            const duration =
+                Number(
+                    document.getElementById(
+                        "durationInput"
+                    ).value
+                ) || 60;
+
+
+            await api(
+                "/api/manox/temp-admins/add",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            username,
+                            durationMinutes:
+                                duration
+                        })
+                }
+            );
+
+        }
+
+
+        else if (
+            modalType ===
+            "edit-temp"
+        ) {
+
+            const expiresAt =
+                Number(
+                    document.getElementById(
+                        "expireInput"
+                    ).value
+                );
+
+
+            if (
+                !expiresAt ||
+                Number.isNaN(
+                    expiresAt
+                )
+            ) {
+
+                showToast(
+                    "Timestamp inválido."
+                );
+
+                return;
+
             }
+
+
+            await api(
+                "/api/manox/temp-admins/edit-expire",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            username,
+                            expiresAt
+                        })
+                }
+            );
+
+        }
+
+
+        closeModal();
+
+        showToast(
+            "Operação realizada com sucesso!"
         );
 
 
-        toast(
-            "Temp Admin adicionado!"
-        );
-
-
-        event.target.reset();
-
-
-        document.getElementById(
-            "tempDuration"
-        ).value = 60;
-
-
-        await loadAllRoles();
+        await loadAll();
 
 
     } catch (error) {
 
-        toast(
-            error.message,
-            true
+        showToast(
+            "Erro: " +
+            error.message
+        );
+
+        console.error(
+            error
         );
 
     }
@@ -1569,91 +1500,108 @@ async function addTempAdmin(
 }
 
 
+
 /*
- * Editar expiração
+ * ============================================================
+ * REMOVER
+ * ============================================================
  */
 
-async function editTemp(
-    index
+async function removeRole(
+    item,
+    type
 ) {
-
-    const item =
-        window.tempAdminData?.[index];
-
-
-    if (!item) {
-        return;
-    }
-
 
     const username =
-        item.username ??
-        item.name ??
-        item.playerName;
+        getName(item);
 
 
-    const answer =
-        prompt(
-            `Nova duração em minutos para ${username}:`
+    const confirmed =
+        confirm(
+            `Deseja remover "${username}"?`
         );
 
 
-    if (answer === null) {
+    if (!confirmed) {
         return;
-    }
-
-
-    const minutes =
-        Number(answer);
-
-
-    if (
-        !Number.isFinite(minutes) ||
-        minutes <= 0
-    ) {
-
-        toast(
-            "Número de minutos inválido.",
-            true
-        );
-
-        return;
-
     }
 
 
     try {
 
-        await api(
-            "/api/manox/temp-admins/edit-expire",
-            {
-                method: "POST",
+        if (
+            type ===
+            "owner"
+        ) {
 
-                body: JSON.stringify({
+            await api(
+                "/api/manox/owners/remove",
+                {
+                    method: "POST",
 
-                    username,
+                    body:
+                        JSON.stringify({
+                            username
+                        })
+                }
+            );
 
-                    addMinutes:
-                        minutes
+        }
 
-                })
-            }
+
+        else if (
+            type ===
+            "admin"
+        ) {
+
+            await api(
+                "/api/manox/admins/remove",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            username
+                        })
+                }
+            );
+
+        }
+
+
+        else if (
+            type ===
+            "temp"
+        ) {
+
+            await api(
+                "/api/manox/temp-admins/remove",
+                {
+                    method: "POST",
+
+                    body:
+                        JSON.stringify({
+                            username
+                        })
+                }
+            );
+
+        }
+
+
+        showToast(
+            "Usuário removido."
         );
 
 
-        toast(
-            "Expiração atualizada!"
-        );
-
-
-        await loadAllRoles();
+        await loadAll();
 
 
     } catch (error) {
 
-        toast(
-            error.message,
-            true
+        showToast(
+            "Erro: " +
+            error.message
         );
 
     }
@@ -1661,537 +1609,28 @@ async function editTemp(
 }
 
 
+
 /*
- * Remover Temp Admin
+ * ============================================================
+ * INICIAR
+ * ============================================================
  */
 
-async function removeTemp(
-    index
-) {
-
-    const item =
-        window.tempAdminData?.[index];
-
-
-    if (!item) {
-        return;
-    }
-
-
-    const username =
-        item.username ??
-        item.name ??
-        item.playerName;
-
-
-    if (
-        !confirm(
-            `Remover ${username} dos Temp Admins?`
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        await api(
-            "/api/manox/temp-admins/remove",
-            {
-                method: "POST",
-
-                body: JSON.stringify({
-
-                    username
-
-                })
-            }
-        );
-
-
-        toast(
-            "Temp Admin removido!"
-        );
-
-
-        await loadAllRoles();
-
-
-    } catch (error) {
-
-        toast(
-            error.message,
-            true
-        );
-
-    }
-
-}
+loadAll();
 
 
 /*
- * ADMINS
+ * Atualizar automaticamente
+ * a cada 30 segundos.
  */
 
-function renderAdmins(
-    list
-) {
-
-    const table =
-        document.getElementById(
-            "adminsTable"
-        );
-
-
-    if (!list.length) {
-
-        table.innerHTML = `
-            <tr>
-                <td colspan="3"
-                    style="color:#71717a;">
-                    Nenhum Admin permanente.
-                </td>
-            </tr>
-        `;
-
-        return;
-
-    }
-
-
-    table.innerHTML =
-        list.map(
-            (item, index) => {
-
-                const username =
-                    item.username ??
-                    item.name ??
-                    item.playerName ??
-                    "—";
-
-
-                const userId =
-                    item.userId ??
-                    item.user_id ??
-                    "—";
-
-
-                return `
-                    <tr>
-
-                        <td>
-                            <span class="badge admin">
-                                🛡️ ${esc(username)}
-                            </span>
-                        </td>
-
-                        <td>
-                            ${esc(userId)}
-                        </td>
-
-                        <td>
-
-                            <button
-                                class="button danger"
-                                onclick="removeAdmin(${index})"
-                            >
-                                Remover
-                            </button>
-
-                        </td>
-
-                    </tr>
-                `;
-
-            }
-        )
-        .join("");
-
-
-    window.adminData =
-        list;
-
-}
-
-
-/*
- * Adicionar Admin
- */
-
-async function addAdmin(
-    event
-) {
-
-    event.preventDefault();
-
-
-    const username =
-        document.getElementById(
-            "adminUsername"
-        ).value.trim();
-
-
-    const userId =
-        document.getElementById(
-            "adminUserId"
-        ).value.trim();
-
-
-    try {
-
-        await api(
-            "/api/manox/admins/add",
-            {
-                method: "POST",
-
-                body: JSON.stringify({
-
-                    username,
-
-                    ...(userId
-                        ? { userId }
-                        : {})
-
-                })
-            }
-        );
-
-
-        toast(
-            "Admin permanente adicionado!"
-        );
-
-
-        event.target.reset();
-
-
-        await loadAllRoles();
-
-
-    } catch (error) {
-
-        toast(
-            error.message,
-            true
-        );
-
-    }
-
-}
-
-
-/*
- * Remover Admin
- */
-
-async function removeAdmin(
-    index
-) {
-
-    const item =
-        window.adminData?.[index];
-
-
-    if (!item) {
-        return;
-    }
-
-
-    const username =
-        item.username ??
-        item.name ??
-        item.playerName;
-
-
-    if (
-        !confirm(
-            `Remover ${username} dos Admins permanentes?`
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        await api(
-            "/api/manox/admins/remove",
-            {
-                method: "POST",
-
-                body: JSON.stringify({
-
-                    username
-
-                })
-            }
-        );
-
-
-        toast(
-            "Admin removido!"
-        );
-
-
-        await loadAllRoles();
-
-
-    } catch (error) {
-
-        toast(
-            error.message,
-            true
-        );
-
-    }
-
-}
-
-
-/*
- * OWNERS
- */
-
-function renderOwners(
-    list
-) {
-
-    const table =
-        document.getElementById(
-            "ownersTable"
-        );
-
-
-    if (!list.length) {
-
-        table.innerHTML = `
-            <tr>
-                <td colspan="3"
-                    style="color:#71717a;">
-                    Nenhum dono cadastrado.
-                </td>
-            </tr>
-        `;
-
-        return;
-
-    }
-
-
-    table.innerHTML =
-        list.map(
-            (item, index) => {
-
-                const username =
-                    item.username ??
-                    item.name ??
-                    item.playerName ??
-                    "—";
-
-
-                const userId =
-                    item.userId ??
-                    item.user_id ??
-                    "—";
-
-
-                return `
-                    <tr>
-
-                        <td>
-                            <span class="badge owner">
-                                👑 ${esc(username)}
-                            </span>
-                        </td>
-
-                        <td>
-                            ${esc(userId)}
-                        </td>
-
-                        <td>
-
-                            <button
-                                class="button danger"
-                                onclick="removeOwner(${index})"
-                            >
-                                Remover
-                            </button>
-
-                        </td>
-
-                    </tr>
-                `;
-
-            }
-        )
-        .join("");
-
-
-    window.ownerData =
-        list;
-
-}
-
-
-/*
- * Adicionar Owner
- */
-
-async function addOwner(
-    event
-) {
-
-    event.preventDefault();
-
-
-    const username =
-        document.getElementById(
-            "ownerUsername"
-        ).value.trim();
-
-
-    const userId =
-        document.getElementById(
-            "ownerUserId"
-        ).value.trim();
-
-
-    try {
-
-        await api(
-            "/api/manox/owners/add",
-            {
-                method: "POST",
-
-                body: JSON.stringify({
-
-                    username,
-
-                    ...(userId
-                        ? { userId }
-                        : {})
-
-                })
-            }
-        );
-
-
-        toast(
-            "Dono adicionado!"
-        );
-
-
-        event.target.reset();
-
-
-        await loadAllRoles();
-
-
-    } catch (error) {
-
-        toast(
-            error.message,
-            true
-        );
-
-    }
-
-}
-
-
-/*
- * Remover Owner
- */
-
-async function removeOwner(
-    index
-) {
-
-    const item =
-        window.ownerData?.[index];
-
-
-    if (!item) {
-        return;
-    }
-
-
-    const username =
-        item.username ??
-        item.name ??
-        item.playerName;
-
-
-    if (
-        !confirm(
-            `Remover ${username} dos donos?`
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        await api(
-            "/api/manox/owners/remove",
-            {
-                method: "POST",
-
-                body: JSON.stringify({
-
-                    username
-
-                })
-            }
-        );
-
-
-        toast(
-            "Dono removido!"
-        );
-
-
-        await loadAllRoles();
-
-
-    } catch (error) {
-
-        toast(
-            error.message,
-            true
-        );
-
-    }
-
-}
-
-
-/*
- * Sair
- */
-
-function logout() {
-
-    window.location.href =
-        "/";
-
-}
-
-
-/*
- * Inicialização
- */
-
-loadAllRoles();
+setInterval(
+    loadAll,
+    30000
+);
 
 </script>
 
 </body>
+
 </html>
