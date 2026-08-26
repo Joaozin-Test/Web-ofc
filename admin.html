@@ -1183,138 +1183,93 @@ async function login() {
     const key =
         input.value.trim();
 
-
     if (!key) {
-
         toast(
             "Digite a ADMIN_API_KEY.",
             "error"
         );
-
         return;
     }
 
-
-    const button =
-        document.querySelector(
-            "#loginScreen .primary-button"
-        );
-
-
-    const originalText =
-        button.textContent;
-
-
-    button.disabled = true;
-    button.textContent = "Verificando...";
-
-
     try {
 
-        /*
-         * IMPORTANTE:
-         * encodeURIComponent evita problemas
-         * caso a Key possua caracteres especiais.
-         */
+        const response = await fetch(
+            API + "/api/manox/verify",
+            {
+                method: "GET",
 
-        const verifyUrl =
-            API +
-            "/api/manox/verify?Key=" +
-            encodeURIComponent(key);
-
-
-        const response =
-            await fetch(verifyUrl);
-
+                headers: {
+                    "x-manox-key": key
+                }
+            }
+        );
 
         let data = {};
 
         try {
-
-            data =
-                await response.json();
-
+            data = await response.json();
         } catch {
-
             data = {};
-
         }
 
+        if (!response.ok) {
 
-        /*
-         * A API deve retornar HTTP 200
-         * quando a Key estiver correta.
-         */
+            toast(
+                data.message ||
+                "ADMIN_API_KEY incorreta.",
+                "error"
+            );
+
+            return;
+        }
 
         if (
-            !response.ok ||
             data.success === false ||
             data.authenticated === false
         ) {
 
-            throw new Error(
-                data.message ||
-                "ADMIN_API_KEY incorreta."
+            toast(
+                "ADMIN_API_KEY incorreta.",
+                "error"
             );
 
+            return;
         }
 
 
         /*
-         * Guardar somente durante a sessão
-         * atual do navegador.
+         * Key válida
          */
 
         API_KEY = key;
 
         sessionStorage.setItem(
             "manox_admin_key",
-            key
+            API_KEY
         );
 
 
-        /*
-         * Abrir painel
-         */
-
         openPanel();
-
-
-        /*
-         * Carregar dados
-         */
 
         await loadAll();
 
 
         toast(
-            "Autenticação realizada com sucesso!",
+            "Login realizado com sucesso!",
             "success"
         );
 
 
     } catch (error) {
 
+        console.error(error);
+
         toast(
-            error.message ||
-            "Não foi possível verificar a Key.",
+            "Não foi possível conectar à API.",
             "error"
         );
 
-
-        input.value = "";
-
-        input.focus();
-
-
-    } finally {
-
-        button.disabled = false;
-        button.textContent =
-            originalText;
-
     }
-
 }
 
 
@@ -2375,14 +2330,82 @@ async function api(endpoint, options = {}) {
        AUTO LOGIN
     ========================================= */
 
-    if (API_KEY) {
+async function verifySavedKey() {
+
+    try {
+
+        const response = await fetch(
+            API + "/api/manox/verify",
+            {
+                method: "GET",
+
+                headers: {
+                    "x-manox-key": API_KEY
+                }
+            }
+        );
+
+
+        if (!response.ok) {
+
+            sessionStorage.removeItem(
+                "manox_admin_key"
+            );
+
+            API_KEY = null;
+
+            return;
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.success === false ||
+            data.authenticated === false
+        ) {
+
+            sessionStorage.removeItem(
+                "manox_admin_key"
+            );
+
+            API_KEY = null;
+
+            return;
+
+        }
+
 
         openPanel();
 
-        loadAll();
+        await loadAll();
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao verificar Key:",
+            error
+        );
+
+        sessionStorage.removeItem(
+            "manox_admin_key"
+        );
+
+        API_KEY = null;
 
     }
 
+}
+
+if (API_KEY) {
+
+    verifySavedKey();
+
+}
 
 </script>
 
