@@ -1,275 +1,254 @@
-const API_URL =
+const ADMIN_API =
     "https://admin-data.josealessandrosst.workers.dev";
 
 const ALLOWED_ORIGIN =
     "https://manox-hub.pages.dev";
 
 
-function corsHeaders() {
-
+function cors() {
     return {
-        "Access-Control-Allow-Origin":
-            ALLOWED_ORIGIN,
-
-        "Access-Control-Allow-Methods":
-            "GET, POST, OPTIONS",
-
+        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
         "Access-Control-Allow-Headers":
-            "Content-Type, x-manox-key",
-
+            "Content-Type, x-admin-key",
         "Content-Type":
             "application/json; charset=utf-8"
     };
-
 }
 
 
-function json(data, status = 200) {
-
+function response(data, status = 200) {
     return new Response(
         JSON.stringify(data),
         {
             status,
-
-            headers:
-                corsHeaders()
+            headers: cors()
         }
     );
-
 }
 
-
-async function getBody(request) {
-
-    try {
-
-        return await request.json();
-
-    } catch {
-
-        return {};
-
-    }
-
-}
-
-
-/*
- * Envia a requisição para o Worker
- * admin-data.
- *
- * A ADMIN_API_KEY não fica nesta Function.
- */
-
-async function adminRequest(
-    path,
-    method,
-    adminKey,
-    body = null
-) {
-
-    const headers = {
-
-        "Content-Type":
-            "application/json",
-
-        "x-manox-key":
-            adminKey
-
-    };
-
-
-    const options = {
-
-        method,
-
-        headers
-
-    };
-
-
-    if (body !== null) {
-
-        options.body =
-            JSON.stringify(body);
-
-    }
-
-
-    const response =
-        await fetch(
-            `${API_URL}${path}`,
-            options
-        );
-
-
-    const text =
-        await response.text();
-
-
-    let data;
-
-
-    try {
-
-        data =
-            JSON.parse(text);
-
-    } catch {
-
-        data = {
-            success:
-                response.ok,
-
-            message:
-                text
-        };
-
-    }
-
-
-    return {
-        response,
-        data
-    };
-
-}
-
-
-
-/* =====================================================
-   OPTIONS
-===================================================== */
 
 export async function onRequestOptions() {
 
-    return new Response(
-        null,
-        {
-            status: 204,
-            headers:
-                corsHeaders()
-        }
-    );
+    return new Response(null, {
+        status: 204,
+        headers: cors()
+    });
 
 }
 
 
-
-/* =====================================================
-   MAIN
-===================================================== */
-
-export async function onRequest(
-    context
-) {
+export async function onRequest(context) {
 
     const request =
         context.request;
 
 
     /*
-     * Aceitar a chave enviada pelo
-     * admin.html.
+     * =================================================
+     * GET
+     *
+     * Usado pelo admin.html para carregar
+     * owners, admins e tempAdmins.
+     * =================================================
      */
 
-    const body =
-        await getBody(request);
+    if (request.method === "GET") {
+
+        const key =
+            request.headers.get(
+                "x-admin-key"
+            );
 
 
-    const adminKey =
-        body.key ||
-        request.headers.get(
-            "x-manox-key"
-        );
+        if (!key) {
 
-
-    if (!adminKey) {
-
-        return json(
-            {
+            return response({
                 success: false,
-
-                authenticated:
-                    false,
-
+                authenticated: false,
                 message:
                     "ADMIN_API_KEY não fornecida."
-            },
-            401
-        );
-
-    }
-
-
-
-    /* =================================================
-       GET
-       Carregar todos os roles
-    ================================================= */
-
-    if (
-        request.method === "GET"
-    ) {
-
-        const result =
-            await adminRequest(
-                "/api/manox/all-roles",
-
-                "GET",
-
-                adminKey
-            );
-
-
-        if (
-            result.response.status === 401 ||
-            result.response.status === 403
-        ) {
-
-            return json(
-                {
-                    success: false,
-
-                    authenticated:
-                        false,
-
-                    message:
-                        "ADMIN_API_KEY inválida."
-                },
-                401
-            );
+            }, 401);
 
         }
 
 
-        return json(
-            {
+        const apiResponse =
+            await fetch(
+                `${ADMIN_API}/api/manox/all-roles`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "x-manox-key": key
+                    }
+                }
+            );
+
+
+        const text =
+            await apiResponse.text();
+
+
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch {
+            data = {
                 success:
-                    result.response.ok,
+                    apiResponse.ok,
+                message:
+                    text
+            };
+        }
 
-                authenticated:
-                    true,
 
-                data:
-                    result.data
-            },
+        /*
+         * Como /all-roles atualmente é público
+         * no seu server.js, precisamos validar a
+         * chave aqui.
+         *
+         * Para isso, fazemos uma requisição de
+         * teste a uma rota realmente protegida.
+         */
 
-            result.response.status
-        );
+        const verifyResponse =
+            await fetch(
+                `${ADMIN_API}/api/manox/admins`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "x-manox-key": key
+                    }
+                }
+            );
+
+
+        if (
+            verifyResponse.status === 401 ||
+            verifyResponse.status === 403
+        ) {
+
+            return response({
+                success: false,
+                authenticated: false,
+                message:
+                    "ADMIN_API_KEY inválida."
+            }, 401);
+
+        }
+
+
+        return response({
+            success: true,
+            authenticated: true,
+            data
+        });
 
     }
 
 
 
-    /* =================================================
-       POST
-       Ações administrativas
-    ================================================= */
+    /*
+     * =================================================
+     * POST
+     * =================================================
+     */
 
-    if (
-        request.method === "POST"
-    ) {
+    if (request.method === "POST") {
+
+        let body;
+
+        try {
+            body =
+                await request.json();
+        } catch {
+            body = {};
+        }
+
+
+        /*
+         * Login:
+         *
+         * admin.html envia:
+         *
+         * {
+         *   "key": "..."
+         * }
+         */
+
+        if (
+            body.key &&
+            !body.action
+        ) {
+
+            const key =
+                body.key;
+
+
+            const verifyResponse =
+                await fetch(
+                    `${ADMIN_API}/api/manox/admins`,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "x-manox-key":
+                                key
+                        }
+                    }
+                );
+
+
+            if (
+                verifyResponse.status === 401 ||
+                verifyResponse.status === 403
+            ) {
+
+                return response({
+                    success: false,
+                    authenticated: false,
+                    message:
+                        "ADMIN_API_KEY inválida."
+                }, 401);
+
+            }
+
+
+            return response({
+                success: true,
+                authenticated: true,
+                message:
+                    "ADMIN_API_KEY válida."
+            });
+
+        }
+
+
+        /*
+         * =================================================
+         * AÇÕES ADMINISTRATIVAS
+         * =================================================
+         */
+
+        const key =
+            request.headers.get(
+                "x-admin-key"
+            );
+
+
+        if (!key) {
+
+            return response({
+                success: false,
+                message:
+                    "ADMIN_API_KEY não fornecida."
+            }, 401);
+
+        }
+
 
         const action =
             body.action;
@@ -279,193 +258,105 @@ export async function onRequest(
             body.payload || {};
 
 
-        let endpoint =
-            null;
+        const routes = {
+
+            "temp-admin-add":
+                "/api/manox/temp-admins/add",
+
+            "temp-admin-edit-expire":
+                "/api/manox/temp-admins/edit-expire",
+
+            "temp-admin-remove":
+                "/api/manox/temp-admins/remove",
+
+            "admin-add":
+                "/api/manox/admins/add",
+
+            "admin-remove":
+                "/api/manox/admins/remove",
+
+            "owner-add":
+                "/api/manox/owners/add",
+
+            "owner-remove":
+                "/api/manox/owners/remove",
+
+            "system-message":
+                "/api/manox/system-message",
+
+            "chat-clear":
+                "/api/manox/chat/clear",
+
+            "server-chat-clear":
+                "/api/manox/server-chat/clear"
+        };
 
 
-        /*
-         * TEMP ADMINS
-         */
-
-        switch (action) {
-
-            case "temp-admin-add":
-
-                endpoint =
-                    "/api/manox/temp-admins/add";
-
-                break;
+        const endpoint =
+            routes[action];
 
 
-            case "temp-admin-edit-expire":
+        if (!endpoint) {
 
-                endpoint =
-                    "/api/manox/temp-admins/edit-expire";
-
-                break;
-
-
-            case "temp-admin-remove":
-
-                endpoint =
-                    "/api/manox/temp-admins/remove";
-
-                break;
-
-
-
-            /*
-             * ADMINS
-             */
-
-            case "admin-list":
-
-                endpoint =
-                    "/api/manox/admins";
-
-                break;
-
-
-            case "admin-add":
-
-                endpoint =
-                    "/api/manox/admins/add";
-
-                break;
-
-
-            case "admin-remove":
-
-                endpoint =
-                    "/api/manox/admins/remove";
-
-                break;
-
-
-
-            /*
-             * OWNERS
-             */
-
-            case "owner-list":
-
-                endpoint =
-                    "/api/manox/owners";
-
-                break;
-
-
-            case "owner-add":
-
-                endpoint =
-                    "/api/manox/owners/add";
-
-                break;
-
-
-            case "owner-remove":
-
-                endpoint =
-                    "/api/manox/owners/remove";
-
-                break;
-
-
-            default:
-
-                return json(
-                    {
-                        success: false,
-
-                        message:
-                            "Ação administrativa desconhecida."
-                    },
-                    400
-                );
+            return response({
+                success: false,
+                message:
+                    "Ação desconhecida."
+            }, 400);
 
         }
 
 
-
-        const method =
-            action === "admin-list" ||
-            action === "owner-list"
-
-                ? "GET"
-
-                : "POST";
-
-
-
-        const result =
-            await adminRequest(
-                endpoint,
-
-                method,
-
-                adminKey,
-
-                method === "POST"
-                    ? payload
-                    : null
-            );
-
-
-
-        /*
-         * A API rejeitou a chave.
-         */
-
-        if (
-            result.response.status === 401 ||
-            result.response.status === 403
-        ) {
-
-            return json(
+        const apiResponse =
+            await fetch(
+                `${ADMIN_API}${endpoint}`,
                 {
-                    success: false,
+                    method: "POST",
 
-                    authenticated:
-                        false,
+                    headers: {
+                        "Content-Type":
+                            "application/json",
 
-                    message:
-                        "ADMIN_API_KEY inválida."
-                },
-                401
+                        "x-manox-key":
+                            key
+                    },
+
+                    body:
+                        JSON.stringify(payload)
+                }
             );
 
+
+        const text =
+            await apiResponse.text();
+
+
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch {
+            data = {
+                success:
+                    apiResponse.ok,
+                message:
+                    text
+            };
         }
 
 
-
-        return json(
-            {
-                success:
-                    result.response.ok,
-
-                authenticated:
-                    true,
-
-                data:
-                    result.data
-            },
-
-            result.response.status
+        return response(
+            data,
+            apiResponse.status
         );
 
     }
 
 
-
-    return json(
-        {
-            success: false,
-
-            message:
-                "Método não permitido."
-        },
-
-        405
-    );
+    return response({
+        success: false,
+        message:
+            "Método não permitido."
+    }, 405);
 
 }
